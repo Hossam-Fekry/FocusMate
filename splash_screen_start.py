@@ -6,7 +6,7 @@ root = CTk()
 root.title("FocusMate")
 root.geometry("800x600")
 root.resizable(False, False)
-set_appearance_mode("dark")
+root.iconbitmap("assets/logo.ico")
 def start_app():
     root.destroy()  # Close the splash screen
     subprocess.run(["python", "screens/home.py"])
