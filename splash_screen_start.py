@@ -1,11 +1,13 @@
 from customtkinter import *
 import subprocess
 from PIL import Image
+from utils.ui_function import center_window
 
 root = CTk()
 root.title("FocusMate")
 root.geometry("800x600")
 root.resizable(False, False)
+center_window(root, 800, 600)
 root.iconbitmap("assets/logo.ico")
 def start_app():
     root.destroy()  # Close the splash screen

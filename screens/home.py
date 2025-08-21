@@ -2,12 +2,14 @@ from customtkinter import *
 import subprocess
 from PIL import Image
 import time
+from utils.ui_function import center_window
 
 root = CTk()
 root.geometry("800x600")
 root.title("FocusMate - Home Page")
 root.resizable(False, False)
 root.iconbitmap("assets/logo.ico")
+center_window(root, 800, 600)
 
 def time_update():
     current_time = time.strftime("%I:%M:%S %p")
