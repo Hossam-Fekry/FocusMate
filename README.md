@@ -11,6 +11,9 @@ FocusMate is a productivity app designed to help you manage your time, tasks, an
 - **Daily Goals:** Set and track your personal goals.
 - **Statistics:** Visualize your productivity and achievements.
 - **Customizable Settings:** Personalize the app to fit your workflow.
+- **Modern UI:** Built with [customtkinter](https://github.com/TomSchimansky/CustomTkinter) for a sleek, dark/light mode interface.
+- **Splash Screen:** Welcoming splash screen on startup.
+- **Navigation Bar:** Quick access to all main features.
 
 ---
 
@@ -22,12 +25,16 @@ FocusMate/
 ├── main.py                 # Main entry point of the app
 │
 ├── assets/                 # Static files (icons, images...)
-│   ├── icons/              
-│   │   ├── pomodoro.png
-│   │   ├── todo.png
-│   │   ├── goals.png
-│   │   ├── stats.png
-│   │   └── settings.png
+│   ├── logo.ico
+│   ├── logo.png
+│   └── icons/
+│       ├── pomodoro-timer.png
+│       ├── todo-list.png
+│       ├── goals.png
+│       ├── stats.png
+│       ├── settings.png
+│       ├── counter.png
+│       └── custom-timer.png
 │
 ├── data/                   # JSON data files
 │   ├── tasks.json          # To-Do List data
@@ -42,12 +49,19 @@ FocusMate/
 │   ├── todo.py             # To-Do List screen
 │   ├── goals.py            # Daily goals screen
 │   ├── stats.py            # Statistics screen
-│   └── settings.py         # Settings screen
+│   ├── settings.py         # Settings screen
+│   ├── counter.py          # Counter screen
+│   └── custom-timer.py     # Custom timer screen
 │
-├── testing/                  # Unit tests
+├── utils/                  # Helper functions
+│   ├── __init__.py
+│   └── ui_function.py      # UI helpers (e.g., center_window)
+│
+├── testing/                # Unit tests
 │   ├── __init__.py
 │   └── test_pomodoro.py    # Sample test file
 │
+├── splash_screen_start.py  # Splash screen entry point
 ├── requirements.txt        # Dependencies (customtkinter, matplotlib, etc.)
 └── README.md               # Documentation
 ```
@@ -69,6 +83,10 @@ FocusMate/
 
 3. **Run the application:**
    ```sh
+   python splash_screen_start.py
+   ```
+   Or, to skip the splash screen:
+   ```sh
    python main.py
    ```
 
@@ -77,8 +95,15 @@ FocusMate/
 ## Dependencies
 
 - `customtkinter`
+- `Pillow`
 - `matplotlib`
 - (See `requirements.txt` for the full list.)
+
+---
+
+## Screenshots
+
+> _Add screenshots of your home page, splash screen, and main features here for better presentation._
 
 ---
 
