@@ -4,13 +4,16 @@ import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from utils.ui_function import center_window
 import PIL.Image as Image
+import json
+
+DATA_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "counted.json")
+
 root = CTk()
 root.geometry("450x350")
 root.title("FocusMate - Counter")
 root.resizable(False, False)
 center_window(root, 450, 350)
 root.iconbitmap("assets/icons/counter.ico")
-number = 0
 back_icon = CTkImage(dark_image=Image.open("./assets/icons/back.png"), size=(25, 25))
 #make the functions
 
@@ -18,19 +21,30 @@ def plus():
     global number
     number = number + 1
     number_label.configure(text=number)
+    save_count(number)
 
 def minus():
     global number
     number = number - 1
     number_label.configure(text=number)
+    save_count(number)
 
 def go_back():    
     root.destroy()
     subprocess.run(["python", os.path.join(os.path.dirname(__file__), "..", "screens", "home.py")])
 
+def load_count():
+    with open(DATA_FILE, "r") as file:
+        count = json.load(file)
+        return count["count"]
 
+
+def save_count(data):
+    with open(DATA_FILE, "w") as file:
+        json.dump({"count": data}, file, indent=4)
 #make the UI
 
+number = load_count()
 
 CTkLabel(root, text="Counter Screen", font=("Arial", 24,"bold")).pack(pady=30)
 
