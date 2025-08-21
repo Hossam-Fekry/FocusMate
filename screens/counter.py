@@ -7,14 +7,8 @@ import PIL.Image as Image
 import json
 
 DATA_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "counted.json")
+SETTINGS_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "settings.json")
 
-root = CTk()
-root.geometry("450x350")
-root.title("FocusMate - Counter")
-root.resizable(False, False)
-center_window(root, 450, 350)
-root.iconbitmap("assets/icons/counter.ico")
-back_icon = CTkImage(dark_image=Image.open("./assets/icons/back.png"), size=(25, 25))
 #make the functions
 
 def plus():
@@ -42,7 +36,23 @@ def load_count():
 def save_count(data):
     with open(DATA_FILE, "w") as file:
         json.dump({"count": data}, file, indent=4)
+
+def load_settings():
+    with open(SETTINGS_FILE, "r") as file:
+        settings = json.load(file)
+        return settings["theme"]
+    
 #make the UI
+
+root = CTk()
+root.geometry("450x350")
+root.title("FocusMate - Counter")
+root.resizable(False, False)
+center_window(root, 450, 350)
+root.iconbitmap("assets/icons/counter.ico")
+set_appearance_mode(load_settings())
+
+back_icon = CTkImage(dark_image=Image.open("./assets/icons/back.png"), size=(25, 25))
 
 number = load_count()
 

@@ -2,6 +2,16 @@ from customtkinter import *
 import subprocess
 from PIL import Image
 from utils.ui_function import center_window
+import json
+
+def start_app():
+    root.destroy()  # Close the splash screen
+    subprocess.run(["python", "screens/home.py"])
+
+def load_settings():
+    with open("data/settings.json", "r") as file:
+        settings = json.load(file)
+        return settings["theme"]
 
 root = CTk()
 root.title("FocusMate")
@@ -9,9 +19,7 @@ root.geometry("800x600")
 root.resizable(False, False)
 center_window(root, 800, 600)
 root.iconbitmap("assets/logo.ico")
-def start_app():
-    root.destroy()  # Close the splash screen
-    subprocess.run(["python", "screens/home.py"])
+set_appearance_mode(load_settings())
 
 CTkLabel(root, text="FocusMate",font=("Arial", 36,"bold")).pack(pady=50)
 logo_image = Image.open("assets/logo.png").resize((200, 200))

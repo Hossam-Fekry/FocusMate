@@ -5,13 +5,7 @@ import time
 import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from utils.ui_function import center_window
-
-root = CTk()
-root.geometry("800x600")
-root.title("FocusMate - Home Page")
-root.resizable(False, False)
-root.iconbitmap("assets/logo.ico")
-center_window(root, 800, 600)
+import json
 
 def time_update():
     current_time = time.strftime("%I:%M:%S %p")
@@ -38,6 +32,20 @@ def change_screen(screen_name):
         root.destroy()
         subprocess.run(["python", "screens/custom-timer.py"])
         
+
+def load_settings():
+    with open("data/settings.json", "r") as file:
+        settings = json.load(file)
+        return settings["theme"]
+
+root = CTk()
+root.geometry("800x600")
+root.title("FocusMate - Home Page")
+root.resizable(False, False)
+root.iconbitmap("assets/logo.ico")
+center_window(root, 800, 600)
+set_appearance_mode(load_settings())
+
 CTkLabel(root, text="FocusMate", font=("Arial", 36, "bold")).pack(pady=50)
 
 clock_label = CTkLabel(root, text="", font=("DS-Digital",50, "bold"))
