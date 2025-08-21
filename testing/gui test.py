@@ -1,22 +1,27 @@
-import tkinter as tk
+from customtkinter import *
+from PIL import Image
 
-def on_click(event):
-    print("Circle button clicked!")
+def go_back():
+    print("رجوع للشاشة السابقة")
 
-root = tk.Tk()
-root.title("Circle Button Example")
+root = CTk()
+root.geometry("500x400")
 
-canvas = tk.Canvas(root, width=200, height=200, bg="white", highlightthickness=0)
-canvas.pack()
+# تحميل أيقونة السهم (لازم يكون عندك صورة سهم مثلاً back.png)
+back_icon = CTkImage(dark_image=Image.open("./assets/icons/back.png"), size=(25, 25))
 
-# رسم دائرة
-circle = canvas.create_oval(50, 50, 150, 150, fill="skyblue", outline="")
-
-# إضافة نص في النص
-text = canvas.create_text(100, 100, text="Start", font=("Arial", 14, "bold"))
-
-# ربط الدائرة والنص بالضغط
-canvas.tag_bind(circle, "<Button-1>", on_click)
-canvas.tag_bind(text, "<Button-1>", on_click)
+back_button = CTkButton(
+    root,
+    text="رجوع",
+    image=back_icon,
+    compound="left",   # يحط النص جنب الأيقونة
+    fg_color="transparent",  # شفاف
+    hover_color="#333333",   # لون عند المرور
+    text_color="white",
+    font=("Arial", 16, "bold"),
+    command=go_back
+)
+back_button.place(x=10, y=10)  # مكان الزر أعلى يسار
 
 root.mainloop()
+

@@ -2,6 +2,8 @@ from customtkinter import *
 import subprocess
 from PIL import Image
 import time
+import sys, os
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from utils.ui_function import center_window
 
 root = CTk()
