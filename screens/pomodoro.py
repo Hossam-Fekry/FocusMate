@@ -7,12 +7,14 @@ import subprocess
 import PIL.Image as Image
 import threading
 import time
+import datetime
 
 SETTINGS_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "settings.json")
 DATA_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "progress.json")
 running = False
 paused = False
-time_left = 25 * 60
+time_left = 25 * 60  # Set timer to 25 minutes
+elapsed_time = 0  # Add this line to track elapsed time
 
 def load_progress():
     try:
@@ -21,11 +23,33 @@ def load_progress():
     except:
         return {"sessions": []}
 
-def save_progress(hours):
-    data = load_progress()
-    data["sessions"].append(hours)
-    with open(DATA_FILE, "w") as f:
-        json.dump(data, f, indent=4)
+def save_progress(minutes):
+    # Load existing data or create new structure
+    if os.path.exists(DATA_FILE):
+        with open(DATA_FILE, "r", encoding="utf-8") as f:
+            try:
+                data = json.load(f)
+            except json.JSONDecodeError:
+                data = {"sessions": []}
+    else:
+        data = {"sessions": []}
+    today = datetime.date.today().isoformat()
+    # Check if today's session exists
+    found = False
+    for session in data["sessions"]:
+        if session["date"] == today:
+            session["minutes"] += minutes
+            found = True
+            break
+    if not found:
+        # Append new session with date and minutes
+        session = {
+            "date": today,
+            "minutes": minutes
+        }
+        data["sessions"].append(session)
+    with open(DATA_FILE, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=4)
 
 def update_timer_label():
     mins, secs = divmod(time_left, 60)
@@ -41,14 +65,23 @@ def start_timer():
 
 # المؤقت نفسه
 def run_timer():
-    global time_left, running, paused
+    global time_left, running, paused, elapsed_time
     while running and time_left > 0:
         if not paused:
             time.sleep(1)
             time_left -= 1
+            elapsed_time += 1  # Track elapsed time
             update_timer_label()
         else:
             time.sleep(0.2)
+    if running and time_left == 0:
+        # Timer finished, save progress
+        minutes = int(elapsed_time / 60)
+        if minutes > 0:
+            save_progress(minutes)
+        timer_label.configure(text="00:00")
+        running = False
+        elapsed_time = 0
 
 # إيقاف مؤقت مؤقت (Pause)
 def pause_timer():
@@ -60,14 +93,14 @@ def pause_timer():
         pause_button.configure(text="Pause")
 
 def reset_timer():
-    global running, elapsed_time
+    global running, elapsed_time, time_left
     running = False
-    if elapsed_time > 0:
-        minutes = elapsed_time / 60
-        hours = round(minutes / 60, 2)
-        save_progress(hours)  # حفظ التقدم بعد ما يخلص
+    minutes = int(elapsed_time / 60)
+    if minutes > 0:
+        save_progress(minutes)
     elapsed_time = 0
-    timer_label.config(text="00:00")
+    time_left = 25 * 60  # Reset timer to 25:00
+    update_timer_label()
 
 def load_settings():
     with open(SETTINGS_FILE, "r") as file:
