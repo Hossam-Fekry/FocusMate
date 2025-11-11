@@ -39,7 +39,7 @@ FocusMate/
 ├── data/                   # JSON data files
 │   ├── tasks.json          # To-Do List data
 │   ├── goals.json          # Daily goals
-│   ├── stats.json          # Study time, achievements...
+│   ├── progress.json       # Study time sessions (by date/minutes)
 │   └── settings.json       # User preferences (theme, etc.)
 │
 ├── screens/                # Each screen as a separate file
@@ -57,12 +57,10 @@ FocusMate/
 │   ├── __init__.py
 │   └── ui_function.py      # UI helpers (e.g., center_window)
 │
-├── testing/                # Unit tests
-│   ├── __init__.py
-│   └── test_pomodoro.py    # Sample test file
+├── testing/                # Experiments and samples (not required to run app)
 │
-├── splash_screen_start.py  # Splash screen entry point
-├── requirements.txt        # Dependencies (customtkinter, matplotlib, etc.)
+├── splash_screen_start.py  # Splash screen entry point (optional)
+├── requirements.txt        # Dependencies (customtkinter, Pillow, matplotlib)
 └── README.md               # Documentation
 ```
 

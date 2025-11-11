@@ -4,7 +4,6 @@ from PIL import Image
 import time
 import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-from utils.ui_function import center_window
 import json
 
 def time_update():
@@ -43,7 +42,6 @@ root.geometry("800x600")
 root.title("FocusMate - Home Page")
 root.resizable(False, False)
 root.iconbitmap("assets/logo.ico")
-center_window(root, 800, 600)
 set_appearance_mode(load_settings())
 
 CTkLabel(root, text="FocusMate", font=("Arial", 36, "bold")).pack(pady=50)
