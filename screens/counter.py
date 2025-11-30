@@ -23,7 +23,7 @@ def minus():
     number_label.configure(text=number)
     save_count(number)
 
-def go_back():    
+def go_back(event = None):    
     root.destroy()
     subprocess.run(["python", os.path.join(os.path.dirname(__file__), "..", "screens", "home.py")])
 
@@ -69,5 +69,7 @@ minus_button.place(x = 300, y = 160)
 
 back_button = CTkButton(root, text="", image=back_icon, compound="left", fg_color="transparent", hover_color="#333333", text_color="white", font=("Arial", 16, "bold"), command=go_back,width=40, height=40)
 back_button.place(x=10, y=10)
+
+root.bind('<Escape>', go_back)
 
 root.mainloop()

@@ -31,7 +31,7 @@ def on_theme_change(choice: str):
     set_appearance_mode(choice)
 
 
-def go_back():
+def go_back(event = None):
     root.destroy()
     subprocess.run(["python", os.path.join(os.path.dirname(__file__), "..", "screens", "home.py")])
 
@@ -62,6 +62,8 @@ theme_menu = CTkOptionMenu(content_frame, values=["dark", "light"], command=on_t
 theme_menu.set(current_theme)
 theme_menu.grid(row=0, column=1, padx=10, pady=10, sticky="e")
 
+
+root.bind('<Escape>', go_back)
 root.mainloop()
 
 

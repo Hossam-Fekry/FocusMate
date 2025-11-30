@@ -30,7 +30,9 @@ def change_screen(screen_name):
     elif screen_name == "custom-timer":
         root.destroy()
         subprocess.run(["python", "screens/custom-timer.py"])
-        
+    elif screen_name == "translator":
+        root.destroy()
+        subprocess.run(["python", "screens/translator.py"])
 
 def load_settings():
     with open("data/settings.json", "r") as file:
@@ -60,7 +62,8 @@ icons = {
     "pomodoro" : "assets/icons/pomodoro-timer.png",
     "todo-list" : "assets/icons/todo-list.png",
     "statics" : "assets/icons/statics.png",
-    "settings" : "assets/icons/settings.png"
+    "translator" : "assets/icons/translator.png",
+    "settings" : "assets/icons/settings.png",
 }
 
 

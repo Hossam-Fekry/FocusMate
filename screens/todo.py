@@ -107,7 +107,7 @@ def refresh_tasks():
         )
         delete_btn.pack(side="right", padx=5)
 
-def go_back():
+def go_back(vent = None):
     root.destroy()
     subprocess.run(["python", os.path.join(os.path.dirname(__file__), "..", "screens", "home.py")])
 
@@ -132,5 +132,6 @@ back_button.place(x=10, y=10)
 refresh_tasks()
 
 root.bind("<Return>", lambda event: add_task())
+root.bind('<Escape>', go_back)
 
 root.mainloop()

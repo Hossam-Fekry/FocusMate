@@ -107,7 +107,7 @@ def load_settings():
         settings = json.load(file)
         return settings["theme"]
 
-def go_back():
+def go_back(event = None):
     root.destroy()
     subprocess.run(["python", os.path.join(os.path.dirname(__file__), "..", "screens", "home.py")])
 
@@ -139,4 +139,5 @@ back_button.place(x=10, y=10)
 
 update_timer_label()
 
+root.bind('<Escape>', go_back)
 root.mainloop()

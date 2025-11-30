@@ -52,7 +52,7 @@ def save_progress(minutes: int):
         pass
 
 
-def go_back():
+def go_back(event = None):
     root.destroy()
     subprocess.run(["python", os.path.join(os.path.dirname(__file__), "..", "screens", "home.py")])
 
@@ -146,7 +146,7 @@ def reset_timer():
 root = CTk()
 root.title("FocusMate - Custom Timer")
 root.geometry("450x380")
-root.resizable(False, False)
+# root.resizable(False, False)
 center_window(root, 450, 380)
 root.iconbitmap("assets/icons/custom-timer.ico")
 set_appearance_mode(load_settings())
@@ -184,6 +184,8 @@ CTkButton(btn_frame, text="Pause", fg_color="#83A400", hover_color="#455600", co
 CTkButton(btn_frame, text="Resume", fg_color="#1B6CA8", hover_color="#124970", command=resume_timer).grid(row=0, column=2, padx=6)
 CTkButton(btn_frame, text="Reset", fg_color="#C0392B", hover_color="#A93226", command=reset_timer).grid(row=0, column=3, padx=6)
 
+
+root.bind('<Escape>', go_back)
 root.mainloop()
 
 

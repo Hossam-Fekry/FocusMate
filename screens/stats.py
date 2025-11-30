@@ -60,7 +60,7 @@ def refresh_chart():
     stats = get_stats_by_date(sessions)
     draw_bar_chart(chart_frame, stats)
 
-def go_back():
+def go_back(event = None):
     root.destroy()
     subprocess.run(["python", os.path.join(os.path.dirname(__file__), "..", "screens", "home.py")])
 
@@ -81,5 +81,6 @@ chart_frame = CTkFrame(root)
 chart_frame.pack(fill="both", expand=True, padx=20, pady=(20, 5))
 
 refresh_chart()  # Show bar chart
+root.bind('<Escape>', go_back)
 
 root.mainloop()
