@@ -7,6 +7,7 @@ import subprocess
 import PIL.Image as Image
 import requests
 from langdetect import detect
+from tkinter import messagebox
 
 SETTINGS_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "settings.json")
 
@@ -37,12 +38,14 @@ def go_back(event=None):
 
 
 def translate_text(textToTranslate, source_language, targetLanguage):
-    url = "https://api.mymemory.translated.net/get"
-    params = {"q": textToTranslate, "langpair": f"{source_language}|{targetLanguage}"}
+    try :
+        url = "https://api.mymemory.translated.net/get"
+        params = {"q": textToTranslate, "langpair": f"{source_language}|{targetLanguage}"}
 
-    result = requests.get(url, params=params).json()
-    return result["responseData"]["translatedText"]
-
+        result = requests.get(url, params=params).json()
+        return result["responseData"]["translatedText"]
+    except:
+        messagebox.showerror("Error", "Translation failed. Please check your internet connection or try again later.")
 
 root = CTk()
 root.title("FocusMate - Translator")
@@ -67,6 +70,7 @@ language_menu = CTkOptionMenu(
     dropdown_fg_color="#1E1E1E",
     dropdown_hover_color="#333333",
     dropdown_text_color="white",
+    command = lambda v=None: uptade_output()
 )
 language_menu.place(x=70, y=235)
 language_menu.set("auto")
@@ -81,6 +85,7 @@ target_menu = CTkOptionMenu(
     dropdown_fg_color="#1E1E1E",
     dropdown_hover_color="#333333",
     dropdown_text_color="white",
+    command = lambda v=None: uptade_output()
 )
 target_menu.place(x=500, y=235)
 target_menu.set("ar")
