@@ -8,6 +8,10 @@ import PIL.Image as Image
 import threading
 import time
 import datetime
+from tkinter import messagebox
+from plyer import notification
+import winsound
+
 
 SETTINGS_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "settings.json")
 DATA_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "progress.json")
@@ -82,6 +86,19 @@ def run_timer():
         timer_label.configure(text="00:00")
         running = False
         elapsed_time = 0
+    if elapsed_time <= 0 and 25 * 60:
+        timer_label.configure(text="00:00:00")
+        minutes = elapsed_time // 60
+        if minutes > 0:
+            save_progress(minutes)
+        # Play sound and show notification
+        winsound.Beep(1000, 1000)  # Beep at 1000Hz for 1 second
+        notification.notify(
+            title='FocusMate Timer',
+            message='Your timer is complete!',
+            app_icon='assets/logo.ico',  # Optional icon
+            timeout=10  # Notification stays for 10 seconds
+        )
 
 # إيقاف مؤقت مؤقت (Pause)
 def pause_timer():
@@ -107,9 +124,28 @@ def load_settings():
         settings = json.load(file)
         return settings["theme"]
 
-def go_back(event = None):
-    root.destroy()
-    subprocess.run(["python", os.path.join(os.path.dirname(__file__), "..", "screens", "home.py")])
+def go_back(event=None):
+    global running
+
+    if running:
+        messagebox.askyesno(
+            "Timer is running",
+            "Do you want to open home while the timer keeps running?"
+        )
+        if not messagebox.askyesno(
+            "Timer is running",
+            "Do you want to open home while the timer keeps running?"
+        ):
+            return
+
+    # افتح home.py بدون إغلاق النافذة الحالية
+    subprocess.Popen([
+        "python",
+        os.path.join(os.path.dirname(__file__), "..", "screens", "home.py")
+    ])
+
+    # لا تغلق root، النافذة ستظل مفتوحة
+    # يمكن إضافة رسالة صغيرة للمستخدم أو تغيير لون الزر لإظهار أن timer يعمل
 
 root = CTk()
 root.title("FocusMate - Pomodoro Timer")
