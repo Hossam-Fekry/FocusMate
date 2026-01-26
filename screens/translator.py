@@ -16,6 +16,13 @@ SETTINGS_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "settings.
 # -------------------------------------------------------
 translated_texts = {}  # cache dictionary
 
+def is_connected():
+    try:
+        requests.get("https://www.google.com", timeout=3)
+        return True
+    except requests.ConnectionError:
+        return False
+
 def get_cached_translation(text, source, target):
     key = f"{text}|||{source}|||{target}"
     return translated_texts.get(key)
@@ -171,4 +178,9 @@ input_box.bind("<KeyRelease>", on_user_typing)
 
 root.bind('<Escape>', go_back)
 
-root.mainloop()
+if is_connected():
+    root.mainloop()
+else:
+    messagebox.showerror("Error", "No internet connection. Please connect to the internet to use the translator.")
+
+# root.mainloop()

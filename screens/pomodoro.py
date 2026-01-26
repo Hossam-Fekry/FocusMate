@@ -17,8 +17,6 @@ SETTINGS_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "settings.
 DATA_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "progress.json")
 running = False
 paused = False
-time_left = 25 * 60  # Set timer to 25 minutes
-elapsed_time = 0  # Add this line to track elapsed time
 
 def load_progress():
     try:
@@ -116,46 +114,57 @@ def reset_timer():
     if minutes > 0:
         save_progress(minutes)
     elapsed_time = 0
-    time_left = 25 * 60  # Reset timer to 25:00
+    time_left = load_time() * 60  # Reset timer to 25:00
     update_timer_label()
 
-def load_settings():
+def load_theme():
     with open(SETTINGS_FILE, "r") as file:
         settings = json.load(file)
         return settings["theme"]
+
+def load_time():
+    with open(SETTINGS_FILE, "r") as file:
+        settings = json.load(file)
+        return settings["pomodoro_time"]
+
 
 def go_back(event=None):
     global running
 
     if running:
-        messagebox.askyesno(
+        user_choice = messagebox.askyesnocancel(
             "Timer is running",
-            "Do you want to open home while the timer keeps running?"
-        )
-        if not messagebox.askyesno(
-            "Timer is running",
-            "Do you want to open home while the timer keeps running?"
-        ):
+            "The timer is still running. Do you want to keep it running and open the home page?"
+        ) 
+
+        if user_choice == None:
             return
-
-    # افتح home.py بدون إغلاق النافذة الحالية
-    subprocess.Popen([
-        "python",
-        os.path.join(os.path.dirname(__file__), "..", "screens", "home.py")
-    ])
-
-    # لا تغلق root، النافذة ستظل مفتوحة
-    # يمكن إضافة رسالة صغيرة للمستخدم أو تغيير لون الزر لإظهار أن timer يعمل
+        if user_choice == True:
+            subprocess.Popen([
+                "python",
+                os.path.join(os.path.dirname(__file__), "..", "screens", "home.py")
+            ])
+        if user_choice == False:
+            root.destroy()
+            subprocess.run(["python", os.path.join(os.path.dirname(__file__), "..", "screens", "home.py")])
+    else:
+        root.destroy()
+        subprocess.run(["python", os.path.join(os.path.dirname(__file__), "..", "screens", "home.py")])
+    
+# ! set the main settings for the pomodoro screen
 
 root = CTk()
 root.title("FocusMate - Pomodoro Timer")
 root.resizable(False, False)
 root.geometry("400x300")
 center_window(root, 400, 300)
-set_appearance_mode(load_settings())
+set_appearance_mode(load_theme())
 root.iconbitmap("assets/icons/pomodoro-timer.ico")
 back_icon = CTkImage(dark_image=Image.open("./assets/icons/back.png"), size=(25, 25))
 pomodoro_image = CTkImage(dark_image=Image.open("./assets/icons/pomodoro-timer.png"), size=(100, 100))
+time_left = load_time() * 60  # Set timer to 25 minutes
+elapsed_time = 0  # Add this line to track elapsed time
+
 CTkLabel(root, image=pomodoro_image, text="", font=("Arial", 24, "bold")).pack(pady=20)
 timer = "25:00"
 timer_label = CTkLabel(root, text=timer, font=("Arial", 40, "bold"))

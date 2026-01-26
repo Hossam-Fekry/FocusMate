@@ -69,16 +69,25 @@ def go_back(event=None):
     global time_running
 
     if time_running:
-        messagebox.askyesno(
+        user_choice = messagebox.askyesnocancel(
             "Timer is running",
-            "Do you want to open home while the timer keeps running?"
-        )
-        if not messagebox.askyesno(
-            "Timer is running",
-            "Do you want to open home while the timer keeps running?"
-        ):
-            return
+            "The timer is still running. Do you want to keep it running and open the home page?"
+        ) 
 
+        if user_choice == None:
+            return
+        if user_choice == True:
+            subprocess.Popen([
+                "python",
+                os.path.join(os.path.dirname(__file__), "..", "screens", "home.py")
+            ])
+        if user_choice == False:
+            root.destroy()
+            subprocess.run(["python", os.path.join(os.path.dirname(__file__), "..", "screens", "home.py")])
+    else:
+        root.destroy()
+        subprocess.run(["python", os.path.join(os.path.dirname(__file__), "..", "screens", "home.py")])
+    
     # افتح home.py بدون إغلاق النافذة الحالية
     subprocess.Popen([
         "python",
