@@ -22,8 +22,9 @@ def load_settings():
         return "dark"
 
 
-def save_settings(theme_value: str):
-    data = {"theme": theme_value}
+def save_settings(theme_value: str, pomodoro_time: int = 25):
+    data = {"theme": theme_value,
+            "pomodoro_time": pomodoro_time}
     with open(SETTINGS_FILE, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
 

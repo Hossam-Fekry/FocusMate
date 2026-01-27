@@ -87,16 +87,6 @@ def go_back(event=None):
     else:
         root.destroy()
         subprocess.run(["python", os.path.join(os.path.dirname(__file__), "..", "screens", "home.py")])
-    
-    # افتح home.py بدون إغلاق النافذة الحالية
-    subprocess.Popen([
-        "python",
-        os.path.join(os.path.dirname(__file__), "..", "screens", "home.py")
-    ])
-
-    # لا تغلق root، النافذة ستظل مفتوحة
-    # يمكن إضافة رسالة صغيرة للمستخدم أو تغيير لون الزر لإظهار أن timer يعمل
-
 
 
 def update_timer_label():
@@ -144,6 +134,11 @@ def update_timer_background():
 
         remaining_time -= 1
         elapsed_seconds += 1
+
+        # Save progress every 60 seconds
+        if elapsed_seconds % 60 == 0:
+            minutes = elapsed_seconds // 60
+            save_progress(minutes)
 
         if remaining_time <= 0:
             # Timer finished
@@ -226,6 +221,10 @@ def stop_timer():
 
 
 def reset_timer():
+    global elapsed_seconds, time_running
+    minutes = elapsed_seconds // 60
+    if minutes > 0:
+        save_progress(minutes)
     stop_timer()
     timer_label.configure(text="00:00:00")
 
@@ -237,6 +236,8 @@ root.geometry("450x380")
 center_window(root, 450, 380)
 root.iconbitmap("assets/icons/custom-timer.ico")
 set_appearance_mode(load_settings())
+root.attributes('-topmost', True)
+
 
 back_icon = CTkImage(dark_image=Image.open("./assets/icons/back.png"), size=(25, 25))
 back_button = CTkButton(root, text="", image=back_icon,

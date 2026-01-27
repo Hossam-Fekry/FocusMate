@@ -74,6 +74,9 @@ def run_timer():
             time_left -= 1
             elapsed_time += 1  # Track elapsed time
             update_timer_label()
+            if elapsed_time == 60:
+                elapsed_time = 0
+                save_progress(1)
         else:
             time.sleep(0.2)
     if running and time_left == 0:
@@ -84,7 +87,7 @@ def run_timer():
         timer_label.configure(text="00:00")
         running = False
         elapsed_time = 0
-    if elapsed_time <= 0 and 25 * 60:
+    if elapsed_time <= 0 and load_time() * 60:
         timer_label.configure(text="00:00:00")
         minutes = elapsed_time // 60
         if minutes > 0:

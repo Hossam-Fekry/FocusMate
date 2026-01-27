@@ -21,7 +21,7 @@ root.title("FocusMate - To-Do List")
 root.geometry("500x600")
 root.resizable(False, False)
 center_window(root, 500, 600)
-root.iconbitmap("assets/logo.ico")
+root.iconbitmap("assets/icons/todo-list.ico")
 delete_icon = CTkImage(Image.open("assets/icons/delete.png"))
 back_icon = CTkImage(dark_image=Image.open("./assets/icons/back.png"), size=(25, 25))
 # ملف حفظ المهام

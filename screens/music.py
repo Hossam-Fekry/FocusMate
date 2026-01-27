@@ -41,7 +41,7 @@ def volume_down():
 
 # -------------------- NAVIGATION --------------------
 
-def go_back():
+def go_back(event = None):
     root.destroy()
     subprocess.run([
         "python",
@@ -112,5 +112,7 @@ CTkButton(volume_frame, text="🔊", width=60, command=volume_up).grid(row=0, co
 back_icon = CTkImage(dark_image=Image.open("./assets/icons/back.png"), size=(25, 25))
 back_button = CTkButton(root, text="", image=back_icon, compound="left", fg_color="transparent", hover_color="#333333", text_color="white", font=("Arial", 16, "bold"), command=go_back,width=40, height=40)
 back_button.place(x=10, y=10)
+
+root.bind("<Escape>", go_back)
 
 root.mainloop()
