@@ -1,1 +1,18 @@
-[]
+[
+    {
+        "text": "Study Math",
+        "done": false
+    },
+    {
+        "text": "Learn OOP",
+        "done": false
+    },
+    {
+        "text": "improve  FocusMate",
+        "done": false
+    },
+    {
+        "text": "work on the AI page Gui in   focus mate",
+        "done": false
+    }
+]

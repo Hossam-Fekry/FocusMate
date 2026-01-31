@@ -36,6 +36,9 @@ def change_screen(screen_name):
     elif screen_name == "music":
         root.destroy()
         subprocess.run(["python", "screens/music.py"])
+    elif screen_name == "Ai":
+        root.destroy()
+        subprocess.run(["python", "screens/Ai.py"])
 
 def load_settings():
     with open("data/settings.json", "r") as file:
@@ -67,6 +70,7 @@ icons = {
     "statics" : "assets/icons/statics.png",
     "translator" : "assets/icons/translator.png",
     "music" : "assets/icons/music.png",
+    "Ai" : "assets/icons/Ai.png",
     "settings" : "assets/icons/settings.png",
 }
 
