@@ -1,4 +1,5 @@
 # ================== Imports ==================
+import re
 from urllib import response
 from customtkinter import *
 import json
@@ -118,7 +119,7 @@ def load_progress():
 
 
 # ================== AI Logic ==================
-def get_ai_reply(user_message):
+def get_ai_reply(event = None):
     #load the entire chat history including the new user message
     message = [system_prompt] + chat_history[-20:] 
     response = client.responses.create(
@@ -129,7 +130,6 @@ def get_ai_reply(user_message):
 
 
 # ================== UI Helpers ==================
-import re
 
 def insert_markdown(text, role_tag):
     chat_box.configure(state="normal")
