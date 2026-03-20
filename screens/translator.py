@@ -22,6 +22,9 @@ def is_connected():
         return True
     except requests.ConnectionError:
         return False
+    except requests.exceptions.ReadTimeout:
+        return False
+
 
 def get_cached_translation(text, source, target):
     key = f"{text}|||{source}|||{target}"
@@ -181,6 +184,6 @@ root.bind('<Escape>', go_back)
 if is_connected():
     root.mainloop()
 else:
-    messagebox.showerror("Error", "No internet connection. Please connect to the internet to use the translator.")
+    messagebox.showerror("Bad internet connection", "No internet connection. Please connect to the internet or try to have a stable connection to use the translator.")
 
 # root.mainloop()
