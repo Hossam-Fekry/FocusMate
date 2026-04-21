@@ -1,14 +1,5 @@
 
 Todo:
-  ☐ check the app flow and make sure it is working as excpected
-  ☐ add more tests to cover edge cases
-  ☐ Write all Found bugs
-  ☐ start working on the bugs if exists
-  ☐ write a full documintation for the exist project an feature an expected featuers in the future
-  ☐ check the code for any refactoring and make sure it is clean and readable
-  ☐ check the performance of the app and optimize if needed
-  ☐ make a full & detailed report of the expected featuers contains the feature and how it will help the app and how it can be developed or a basic steps for it
-  ☐ check the security of the app and make sure it is secure and protected from any vulnerabilities
-  ☐ start working on the new features if exists and make sure to follow the best practices and standards in the development process
-  ☐ make sure to keep the codebase organized and maintainable for future development and updates
-  ☐ review the code and make sure it is following the coding standards and guidelines
+  ✔ Add a stauts label in the video player page to show if the video is loading or if it is having an error @started(26-04-21 22:07) @done(26-04-21 22:12) @lasted(5m9s)
+  ✔ Add shortcuts to the video player page to go back with ESC and to start the video with Return if you are foucsing on the label @started(26-04-21 22:04) @done(26-04-21 22:06) @lasted(2m55s)
+  ✔ update the pause function to make it pause and play function @started(26-04-21 22:24) @done(26-04-21 22:26) @lasted(2m30s)

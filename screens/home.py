@@ -39,6 +39,9 @@ def change_screen(screen_name):
     elif screen_name == "Ai":
         root.destroy()
         subprocess.run(["python", "screens/Ai.py"])
+    elif screen_name == "Video-Player":
+        root.destroy()
+        subprocess.run([sys.executable, "screens/video-player.py"])
 
 def load_settings():
     with open("data/settings.json", "r") as file:
@@ -46,7 +49,7 @@ def load_settings():
         return settings["theme"]
 
 root = CTk()
-root.geometry("800x600")
+root.geometry("1000x600")
 root.title("FocusMate - Home Page")
 root.resizable(False, False)
 root.iconbitmap("assets/logo.ico")
@@ -66,6 +69,7 @@ icons = {
     "counter" : "assets/icons/counter.png",
     "custom-timer" : "assets/icons/custom-timer.png",
     "pomodoro" : "assets/icons/pomodoro-timer.png",
+    "Video-Player" : "assets/icons/video-player.png",
     "todo-list" : "assets/icons/todo-list.png",
     "statics" : "assets/icons/statics.png",
     "translator" : "assets/icons/translator.png",
