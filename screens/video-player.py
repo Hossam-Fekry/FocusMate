@@ -10,6 +10,9 @@ import yt_dlp
 from PIL import Image
 import subprocess
 from tkinter import messagebox
+import requests
+
+
 SETTINGS_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "settings.json")
 
 # * VLC SETUP
@@ -58,6 +61,31 @@ def get_video_stream(url):
 
 #     threading.Thread(target=load).start()
 
+def is_connected():
+    try:
+        requests.get("https://www.google.com", timeout=3)
+        return True
+    except requests.ConnectionError:
+        return False
+    except requests.exceptions.ReadTimeout:
+        return False
+
+
+def is_valid_video(url):
+    import yt_dlp
+
+    ydl_opts = {
+        'quiet': True,
+        'skip_download': True
+    }
+
+    try:
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(url, download=False)
+            return True, info
+    except Exception as e:
+        return False, str(e)
+
 def play_video(event = None):
     url = Video_link_entry.get()
 
@@ -66,9 +94,15 @@ def play_video(event = None):
         status_label.configure(text="❌ Enter URL")
         return
     
-    status_label.configure(text="Loading... 🔄")
-
+    status_label.configure(text="Checking link... 🔍")
+    valid, data = is_valid_video(url)
     
+    if not valid:
+        messagebox.showerror("Error", "Invalid or unsupported video link")
+        status_label.configure(text="❌ Invalid link")
+        return
+    
+    status_label.configure(text="Loading... 🔄")
 
     def load():
         try:
@@ -93,6 +127,8 @@ def play_video(event = None):
             Video_link_entry.configure(state = "disabled")
             start_button.configure(state = "disabled")
             status_label.configure(text="Playing 🔥")
+            title = data.get("title", "Unknown")
+            status_label.configure(text=f"Playing 🎬 {title}")            
 
 
             
@@ -182,4 +218,8 @@ root.bind("<Escape>", go_back)
 root.bind("<space>", pause_video)
 Video_link_entry.bind("<Return>", play_video)
 
-root.mainloop()
+if is_connected():
+    root.mainloop()
+else:
+    messagebox.showerror("Bad internet connection", "No internet connection. Please connect to the internet or try to have a stable connection to use the translator.")
+

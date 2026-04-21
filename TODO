@@ -3,3 +3,5 @@ Todo:
   ✔ Add a stauts label in the video player page to show if the video is loading or if it is having an error @started(26-04-21 22:07) @done(26-04-21 22:12) @lasted(5m9s)
   ✔ Add shortcuts to the video player page to go back with ESC and to start the video with Return if you are foucsing on the label @started(26-04-21 22:04) @done(26-04-21 22:06) @lasted(2m55s)
   ✔ update the pause function to make it pause and play function @started(26-04-21 22:24) @done(26-04-21 22:26) @lasted(2m30s)
+  ✔ Fix the bug in video player page that if you tried to open it with no internet connection @started(26-04-21 22:57) @done(26-04-21 22:59) @lasted(2m41s)
+  ✔ Fix the bug in video player page that if you used invalid video link @started(26-04-21 22:41) @done(26-04-21 22:56) @lasted(15m)
