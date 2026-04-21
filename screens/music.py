@@ -3,6 +3,8 @@ import os, sys
 import subprocess
 import pyautogui
 import PIL.Image as Image
+import requests
+from tkinter import messagebox
 
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from utils.ui_function import center_window
@@ -15,6 +17,15 @@ PLAYLISTS = {
 }
 
 # -------------------- SPOTIFY CONTROL --------------------
+def is_connected():
+    try:
+        requests.get("https://www.google.com", timeout=3)
+        return True
+    except requests.ConnectionError:
+        return False
+    except requests.exceptions.ReadTimeout:
+        return False
+
 
 def open_playlist(choice):
     uri = PLAYLISTS.get(choice)
@@ -115,4 +126,8 @@ back_button.place(x=10, y=10)
 
 root.bind("<Escape>", go_back)
 
-root.mainloop()
+if is_connected():
+    root.mainloop()
+else:
+    messagebox.showerror("Bad internet connection", "No internet connection. Please connect to the internet or try to have a stable connection to use the translator.")
+

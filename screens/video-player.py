@@ -127,8 +127,8 @@ def play_video(event = None):
             Video_link_entry.configure(state = "disabled")
             start_button.configure(state = "disabled")
             status_label.configure(text="Playing 🔥")
-            title = data.get("title", "Unknown")
-            status_label.configure(text=f"Playing 🎬 {title}")            
+            # title = data.get("title", "Unknown")
+            status_label.configure(text=f"Playing 🎬")            
 
 
             

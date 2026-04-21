@@ -12,11 +12,22 @@ import datetime
 from PIL import Image
 import subprocess
 from dotenv import load_dotenv
+import requests
 
 load_dotenv()
 
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from utils.ui_function import center_window
+
+def is_connected():
+    try:
+        requests.get("https://www.google.com", timeout=3)
+        return True
+    except requests.ConnectionError:
+        return False
+    except requests.exceptions.ReadTimeout:
+        return False
+
 
 def load_progress():
     if os.path.exists(PROGRESS_FILE):
@@ -286,4 +297,8 @@ load_chat_history()
 #     add_message(msg["role"], msg["content"])
 
 
-root.mainloop()
+if is_connected():
+    root.mainloop()
+else:
+    messagebox.showerror("Bad internet connection", "No internet connection. Please connect to the internet or try to have a stable connection to use the translator.")
+
