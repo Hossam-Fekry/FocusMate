@@ -1,7 +1,5 @@
 from customtkinter import *
 import tkinter as tk
-import threading
-import time
 import os
 import json
 import subprocess
@@ -170,50 +168,6 @@ def update_timer_background():
 
     # إعادة استدعاء الدالة بعد ثانية
     root.after(1000, update_timer_background)
-
-
-# ---------------- FIXED run_timer (SAFE UI UPDATES) -----------------
-def run_timer():
-    global remaining_time, time_running, paused, elapsed_seconds
-
-    while remaining_time > 0 and time_running:
-        if not paused:
-            try:
-                if root.winfo_exists():
-                    update_timer_label()
-                else:
-                    return  # stop updates if window closed
-            except:
-                return
-
-            time.sleep(1)
-            remaining_time -= 1
-            elapsed_seconds += 1
-        else:
-            time.sleep(0.2)
-
-    if remaining_time <= 0 and time_running:
-        try:
-            if root.winfo_exists():
-                timer_label.configure(text="00:00:00")
-        except:
-            pass
-
-        minutes = elapsed_seconds // 60
-        if minutes > 0:
-            save_progress(minutes)
-
-        # Notification + sound
-        winsound.Beep(1000, 1000)
-        notification.notify(
-            title='FocusMate Timer',
-            message='Your timer is complete!',
-            app_icon='assets/logo.ico',
-            timeout=10
-        )
-
-        stop_timer()
-
 
 def pause_timer():
     global paused
