@@ -16,7 +16,7 @@ from utils.ui_function import center_window
 
 SETTINGS_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "settings.json")
 PROGRESS_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "progress.json")
-
+home_opened = False
 
 def load_settings():
     try:
@@ -66,7 +66,7 @@ elapsed_seconds = 0
 
 # ---------------- FIXED go_back (NO CRASH) -----------------
 def go_back(event=None):
-    global time_running
+    global time_running, home_opened
 
     if time_running:
         user_choice = messagebox.askyesnocancel(
@@ -77,16 +77,29 @@ def go_back(event=None):
         if user_choice == None:
             return
         if user_choice == True:
-            subprocess.Popen([
+            if home_opened:
+                messagebox.showinfo("Home Page", "The home page is already open.")
+                return
+            else:
+                subprocess.Popen([
                 "python",
                 os.path.join(os.path.dirname(__file__), "..", "screens", "home.py")
-            ])
+                ])
+                home_opened = True
         if user_choice == False:
             root.destroy()
-            subprocess.run(["python", os.path.join(os.path.dirname(__file__), "..", "screens", "home.py")])
+            if not home_opened:
+                subprocess.run(["python", os.path.join(os.path.dirname(__file__), "..", "screens", "home.py")])
+                home_opened = True
+            else:
+                return
     else:
         root.destroy()
-        subprocess.run(["python", os.path.join(os.path.dirname(__file__), "..", "screens", "home.py")])
+        if not home_opened:
+            subprocess.run(["python", os.path.join(os.path.dirname(__file__), "..", "screens", "home.py")])
+            home_opened = True
+        else:
+            return
 
 
 def update_timer_label():

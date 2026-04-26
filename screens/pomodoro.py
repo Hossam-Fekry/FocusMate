@@ -17,6 +17,7 @@ SETTINGS_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "settings.
 DATA_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "progress.json")
 running = False
 paused = False
+home_opened = False
 
 def load_progress():
     try:
@@ -132,7 +133,7 @@ def load_time():
 
 
 def go_back(event=None):
-    global running
+    global running, home_opened
 
     if running:
         user_choice = messagebox.askyesnocancel(
@@ -143,13 +144,22 @@ def go_back(event=None):
         if user_choice == None:
             return
         if user_choice == True:
-            subprocess.Popen([
-                "python",
-                os.path.join(os.path.dirname(__file__), "..", "screens", "home.py")
-            ])
+            if home_opened:
+                messagebox.showinfo("Home Page", "The home page is already open.")
+            else:
+                subprocess.Popen([
+                    "python",
+                    os.path.join(os.path.dirname(__file__), "..", "screens", "home.py")
+                ])
+                home_opened = True
+                
         if user_choice == False:
             root.destroy()
-            subprocess.run(["python", os.path.join(os.path.dirname(__file__), "..", "screens", "home.py")])
+            if not home_opened:
+                subprocess.run(["python", os.path.join(os.path.dirname(__file__), "..", "screens", "home.py")])
+                home_opened = True
+            else:
+                messagebox.showinfo("Home Page", "The home page is already open.")
     else:
         root.destroy()
         subprocess.run(["python", os.path.join(os.path.dirname(__file__), "..", "screens", "home.py")])
