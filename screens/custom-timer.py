@@ -115,13 +115,67 @@ def start_timer():
     if time_running:
         return
     paused = False
-    try:
-        h = int(hours_var.get())
-        m = int(minutes_var.get())
-        s = int(seconds_var.get())
-    except ValueError:
+    # try:
+    #     h = int(hours_var.get())
+    #     m = int(minutes_var.get())
+    #     s = int(seconds_var.get())
+    # except ValueError:
+    #     return
+    # h = hours_var.get().strip()
+    # m = minutes_var.get().strip()
+    # s = seconds_var.get().strip()
+    # if h == "":
+    #     h = 0
+    # if m == "":
+    #     m = 0
+    # if s == "":
+    #     s = 0
+
+
+    # if not h.isdigit() or not m.isdigit() or not s.isdigit():
+    #     messagebox.showerror("Invalid Input", "Please enter valid numbers for hours, minutes, and seconds.")
+    #     return
+
+    # h = int(h)
+    # m = int(m)
+    # s = int(s)
+
+    h = hours_var.get().strip()
+    m = minutes_var.get().strip()
+    s = seconds_var.get().strip()
+
+    if h == "":
+        h = "0"
+    if m == "":
+        m = "0"
+    if s == "":
+        s = "0"
+
+    # ✅ validate BEFORE converting
+    if not h.isdigit() or not m.isdigit() or not s.isdigit():
+        messagebox.showerror("Invalid Input", "Please enter valid numbers.")
         return
-    total = h*3600 + m*60 + s
+
+    # ✅ now convert
+    h = int(h)
+    m = int(m)
+    s = int(s)
+
+    
+    if int(m)  > 240:
+        messagebox.showerror("Invalid Input", "For your health please choose lower time to stay focused you limit is 4 hours.")
+        return
+    if int(h) > 4:
+        messagebox.showerror("Invalid Input", "For your health please choose lower time to stay focused you limit is 4 hours.")
+        return
+    if int(s) > 14400:
+        messagebox.showerror("Invalid Input", "Seconds should be less than 3600.")
+        return
+    total = int(h)*3600 + int(m)*60 + int(s)
+    if total > 14400:
+        messagebox.showerror("Invalid Input", "Total time should be less than 4 hours.")
+        return
+    total = int(h)*3600 + int(m)*60 + int(s)
     if total <= 0:
         return
 
@@ -199,8 +253,8 @@ def reset_timer():
 # ----------------- UI -----------------
 root = CTk()
 root.title("FocusMate - Custom Timer")
-root.geometry("450x380")
-center_window(root, 450, 380)
+root.geometry("610x380")
+center_window(root, 610, 380)
 root.iconbitmap("assets/icons/custom-timer.ico")
 set_appearance_mode(load_settings())
 root.attributes('-topmost', True)
