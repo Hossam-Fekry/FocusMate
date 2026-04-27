@@ -7,10 +7,10 @@ Todo:
   ✔ Fix the bug in video player page that if you used invalid video link @started(26-04-21 22:41) @done(26-04-21 22:56) @lasted(15m)
   ✔ Add the the internet check on the music page and Ai page @started(26-04-21 23:02) @done(26-04-21 23:04) @lasted(2m51s)
   ✔ Make the pomodoro-timer page check if the home page is alrady opened before opening it again @started(26-04-26 16:41) @done(26-04-26 16:50) @lasted(9m50s)
-  ☐ Finish the custom-timer page refactoring
+  ✔ Finish the custom-timer page refactoring @done(26-04-27 20:29)
   
 Custom-Timer page refactoring:
   ✔ Make the custom-timer page check if the home page is alrady opened before opening it again @started(26-04-26 16:59) @done(26-04-26 17:01) @lasted(2m37s)
   ✔ make the entrey validation before starting the timer @started(26-04-27 19:53) @done(26-04-27 20:17) @lasted(25m)
   ✔ make the page antiresizeable to save it's width and height @started(26-04-27 19:49) @done(26-04-27 19:51) @lasted(2m18s)
-  ☐ disable the entries when the timer is running to prevent changing the time while the timer is running and make it back when the time is end
+  ✔ disable the entries when the timer is running to prevent changing the time while the timer is running and make it back when the time is end @done(26-04-27 20:29)

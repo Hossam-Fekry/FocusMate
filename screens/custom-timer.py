@@ -181,6 +181,11 @@ def start_timer():
 
     remaining_time = total
     time_running = True
+    hours_entry.configure(state="disabled")
+    minutes_entry.configure(state="disabled")
+    seconds_entry.configure(state="disabled")
+    start_button.configure(state="disabled")
+
     update_timer_background()
 
 def update_timer_background():
@@ -217,6 +222,10 @@ def update_timer_background():
                 app_icon='assets/logo.ico',
                 timeout=10
             )
+            hours_entry.configure(state="normal")
+            minutes_entry.configure(state="normal")
+            seconds_entry.configure(state="normal")
+            start_button.configure(state="normal")
             stop_timer()
             return
 
@@ -275,13 +284,16 @@ hours_var = tk.StringVar(value="0")
 minutes_var = tk.StringVar(value="0")
 seconds_var = tk.StringVar(value="0")
 
-CTkEntry(time_frame, textvariable=hours_var, width=70).grid(row=0, column=0, padx=5)
+hours_entry = CTkEntry(time_frame, textvariable=hours_var, width=70)
+hours_entry.grid(row=0, column=0, padx=5)
 CTkLabel(time_frame, text="h").grid(row=1, column=0)
 
-CTkEntry(time_frame, textvariable=minutes_var, width=70).grid(row=0, column=1, padx=5)
+minutes_entry = CTkEntry(time_frame, textvariable=minutes_var, width=70)
+minutes_entry.grid(row=0, column=1, padx=5)
 CTkLabel(time_frame, text="m").grid(row=1, column=1)
 
-CTkEntry(time_frame, textvariable=seconds_var, width=70).grid(row=0, column=2, padx=5)
+seconds_entry = CTkEntry(time_frame, textvariable=seconds_var, width=70)
+seconds_entry.grid(row=0, column=2, padx=5)
 CTkLabel(time_frame, text="s").grid(row=1, column=2)
 
 timer_label = CTkLabel(root, text="00:00:00", font=("Arial", 36, "bold"))
@@ -290,17 +302,21 @@ timer_label.pack(pady=20)
 btn_frame = CTkFrame(root)
 btn_frame.pack(pady=10)
 
-CTkButton(btn_frame, text="Start", fg_color="#02960C", hover_color="#005506",
-          command=start_timer).grid(row=0, column=0, padx=6)
+start_button = CTkButton(btn_frame, text="Start", fg_color="#02960C", hover_color="#005506",
+          command=start_timer)
+start_button.grid(row=0, column=0, padx=6)
 
-CTkButton(btn_frame, text="Pause", fg_color="#83A400", hover_color="#455600",
-          command=pause_timer).grid(row=0, column=1, padx=6)
+pause_button = CTkButton(btn_frame, text="Pause", fg_color="#83A400", hover_color="#455600",
+          command=pause_timer)
+pause_button.grid(row=0, column=1, padx=6)
 
-CTkButton(btn_frame, text="Resume", fg_color="#1B6CA8", hover_color="#124970",
-          command=resume_timer).grid(row=0, column=2, padx=6)
+resume_button = CTkButton(btn_frame, text="Resume", fg_color="#1B6CA8", hover_color="#124970",
+          command=resume_timer)
+resume_button.grid(row=0, column=2, padx=6)
 
-CTkButton(btn_frame, text="Reset", fg_color="#C0392B", hover_color="#A93226",
-          command=reset_timer).grid(row=0, column=3, padx=6)
+reset_button = CTkButton(btn_frame, text="Reset", fg_color="#C0392B", hover_color="#A93226",
+          command=reset_timer)
+reset_button.grid(row=0, column=3, padx=6)
 
 
 root.bind('<Escape>', go_back)
