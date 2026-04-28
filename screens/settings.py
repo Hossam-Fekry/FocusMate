@@ -1,93 +1,47 @@
-from customtkinter import *
+import customtkinter as ctk
 import json
 import os
-import subprocess
 from PIL import Image
-import sys
 from tkinter import messagebox
+from screens.base_screen import BaseScreen
 
+class SettingsScreen(BaseScreen):
+    def setup_ui(self):
+        self.settings_file = "data/settings.json"
+        self.back_icon = ctk.CTkImage(dark_image=Image.open("./assets/icons/back.png"), size=(25, 25))
+        
+        current_theme = self.controller.settings.get("theme", "dark")
+        
+        self.back_button = ctk.CTkButton(self, text="", image=self.back_icon, compound="left", fg_color="transparent", hover_color="#333333", text_color="white", font=("Arial", 16, "bold"), command=self.go_back, width=40, height=40)
+        self.back_button.place(x=10, y=10)
 
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-from utils.ui_function import center_window
+        ctk.CTkLabel(self, text="Settings", font=("Arial", 24, "bold")).pack(pady=30)
 
-SETTINGS_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "settings.json")
+        self.content_frame = ctk.CTkFrame(self)
+        self.content_frame.pack(fill="x", padx=20, pady=10)
 
+        ctk.CTkLabel(self.content_frame, text="Theme", font=("Arial", 14)).grid(row=0, column=0, padx=10, pady=10, sticky="w")
+        self.theme_menu = ctk.CTkOptionMenu(self.content_frame, values=["dark", "light"], command=self.on_theme_change)
+        self.theme_menu.set(current_theme)
+        self.theme_menu.grid(row=0, column=1, padx=10, pady=10, sticky="e")
 
-def load_settings():
-    try:
-        with open(SETTINGS_FILE, "r", encoding="utf-8") as f:
-            data = json.load(f)
-            return data.get("theme", "dark")
-    except Exception:
-        return "dark"
+        ctk.CTkLabel(self.content_frame, text="Pomodoro Timer (min)", font=("Arial", 14)).grid(row=1, column=0, padx=10, pady=10, sticky="w")
+        self.timer_entry = ctk.CTkEntry(self.content_frame)
+        self.timer_entry.grid(row=1, column=1, padx=10, pady=10, sticky="e")
+        self.timer_entry.insert(0, str(self.controller.settings.get("pomodoro_time", 25)))
+        self.timer_entry.bind("<Return>", lambda event: self.on_timer_change(self.timer_entry.get()))
 
+    def on_theme_change(self, choice):
+        self.controller.save_settings({"theme": choice})
+        ctk.set_appearance_mode(choice)
 
-def save_settings(theme_value: str, pomodoro_time: int = 25):
-    data = {"theme": theme_value,
-            "pomodoro_time": pomodoro_time}
-    with open(SETTINGS_FILE, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=4)
+    def on_timer_change(self, choice):
+        try:
+            minutes = int(choice)
+            self.controller.save_settings({"pomodoro_time": minutes})
+        except ValueError:
+            messagebox.showerror("Invalid Input", "Please enter a valid number for the timer.")
 
-
-def on_theme_change(choice: str):
-    save_settings(choice)
-    set_appearance_mode(choice)
-
-
-def on_timer_change(choice):
-    try:
-        minuts = int(choice)
-        with open(SETTINGS_FILE, "r", encoding="utf-8") as f:
-            data = json.load(f)
-        data["pomodoro_time"] = minuts
-        with open(SETTINGS_FILE, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=4)
-    except ValueError:
-        messagebox.showerror("Invalid Input", "Please enter a valid number for the timer.")
-
-def go_back(event = None):
-    root.destroy()
-    subprocess.run(["python", os.path.join(os.path.dirname(__file__), "..", "screens", "home.py")])
-
-
-# UI setup
-root = CTk()
-root.title("FocusMate - Settings")
-root.geometry("400x250")
-root.resizable(False, False)
-center_window(root, 400, 250)
-root.iconbitmap("assets/icons/Settings.ico")
-
-current_theme = load_settings()
-set_appearance_mode(current_theme)
-
-back_icon = CTkImage(dark_image=Image.open("./assets/icons/back.png"), size=(25, 25))
-back_button = CTkButton(root, text="", image=back_icon, compound="left", fg_color="transparent", hover_color="#333333", text_color="white", font=("Arial", 16, "bold"), command=go_back, width=40, height=40)
-back_button.place(x=10, y=10)
-
-CTkLabel(root, text="Settings", font=("Arial", 24, "bold")).pack(pady=30)
-
-content_frame = CTkFrame(root)
-content_frame.pack(fill="x", padx=20, pady=10)
-
-CTkLabel(content_frame, text="Theme", font=("Arial", 14)).grid(row=0, column=0, padx=10, pady=10, sticky="w")
-
-theme_menu = CTkOptionMenu(content_frame, values=["dark", "light"], command=on_theme_change)
-theme_menu.set(current_theme)
-theme_menu.grid(row=0, column=1, padx=10, pady=10, sticky="e")
-
-
-CTkLabel(content_frame, text="Pomodoro Timer (minutes)", font=("Arial", 14)).grid(row=1, column=0, padx=10, pady=10, sticky="w")
-
-timer_entry = CTkEntry(content_frame)
-timer_entry.grid(row=1, column=1, padx=10, pady=10, sticky="e")
-with open(SETTINGS_FILE, "r") as file:
-    settings = json.load(file)
-    timer_entry.insert(0, str(settings.get("pomodoro_time", 25)))
-
-timer_entry.bind("<Return>", lambda event: on_timer_change(timer_entry.get()))
-
-root.bind('<Escape>', go_back)
-root.mainloop()
-
-
+    def go_back(self):
+        from screens.home import HomeScreen
+        self.controller.show_frame(HomeScreen)

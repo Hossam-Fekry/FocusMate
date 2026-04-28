@@ -1,133 +1,58 @@
-from customtkinter import *
-import os, sys
+import customtkinter as ctk
+import os
 import subprocess
 import pyautogui
-import PIL.Image as Image
+from PIL import Image
 import requests
 from tkinter import messagebox
+from screens.base_screen import BaseScreen
 
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-from utils.ui_function import center_window
+class MusicScreen(BaseScreen):
+    PLAYLISTS = {
+        "Holy quaran": "spotify:playlist:2Zi4QNF4bDwRmT1P6WMYiD",
+        "Focus Music": "spotify:playlist:679wCT6dVMDBxrYa5NcrXL"
+    }
 
-# -------------------- PLAYLISTS --------------------
+    def setup_ui(self):
+        self.back_icon = ctk.CTkImage(dark_image=Image.open("./assets/icons/back.png"), size=(25, 25))
+        self.music_icon = ctk.CTkImage(dark_image=Image.open("./assets/icons/music.png"), size=(80, 80))
 
-PLAYLISTS = {
-    "Holy quaran": "spotify:playlist:2Zi4QNF4bDwRmT1P6WMYiD",
-    "Focus Music": "spotify:playlist:679wCT6dVMDBxrYa5NcrXL"
-}
+        ctk.CTkLabel(self, image=self.music_icon, text="").pack(pady=15)
+        ctk.CTkLabel(self, text="Music Hub", font=("Arial", 24, "bold")).pack(pady=5)
 
-# -------------------- SPOTIFY CONTROL --------------------
-def is_connected():
-    try:
-        requests.get("https://www.google.com", timeout=3)
-        return True
-    except requests.ConnectionError:
-        return False
-    except requests.exceptions.ReadTimeout:
-        return False
+        self.playlist_var = ctk.StringVar(value="Focus Music")
+        self.playlist_menu = ctk.CTkOptionMenu(self, values=list(self.PLAYLISTS.keys()), variable=self.playlist_var, width=200)
+        self.playlist_menu.pack(pady=10)
 
+        ctk.CTkButton(self, text="Open Playlist", command=self.open_playlist, fg_color="#1DB954", hover_color="#14833B").pack(pady=10)
 
-def open_playlist(choice):
-    uri = PLAYLISTS.get(choice)
-    if uri:
-        subprocess.Popen(
-            ["cmd", "/c", f"start {uri}"],
-            shell=True
-        )
+        controls_frame = ctk.CTkFrame(self, fg_color="transparent")
+        controls_frame.pack(pady=15)
 
-def play_pause():
-    pyautogui.press("playpause")
+        ctk.CTkButton(controls_frame, text="⏮", width=50, command=self.previous_track).grid(row=0, column=0, padx=5)
+        ctk.CTkButton(controls_frame, text="⏯", width=50, command=self.play_pause).grid(row=0, column=1, padx=5)
+        ctk.CTkButton(controls_frame, text="⏭", width=50, command=self.next_track).grid(row=0, column=2, padx=5)
 
-def next_track():
-    pyautogui.press("nexttrack")
+        volume_frame = ctk.CTkFrame(self, fg_color="transparent")
+        volume_frame.pack(pady=10)
 
-def previous_track():
-    pyautogui.press("prevtrack")
+        ctk.CTkButton(volume_frame, text="🔉", width=60, command=self.volume_down).grid(row=0, column=0, padx=10)
+        ctk.CTkButton(volume_frame, text="🔊", width=60, command=self.volume_up).grid(row=0, column=1, padx=10)
 
-def volume_up():
-    pyautogui.press("volumeup")
+        self.back_button = ctk.CTkButton(self, text="", image=self.back_icon, compound="left", fg_color="transparent", hover_color="#333333", text_color="white", font=("Arial", 16, "bold"), command=self.go_back, width=40, height=40)
+        self.back_button.place(x=10, y=10)
 
-def volume_down():
-    pyautogui.press("volumedown")
+    def open_playlist(self):
+        uri = self.PLAYLISTS.get(self.playlist_var.get())
+        if uri:
+            subprocess.Popen(["cmd", "/c", f"start {uri}"], shell=True)
 
-# -------------------- NAVIGATION --------------------
+    def play_pause(self): pyautogui.press("playpause")
+    def next_track(self): pyautogui.press("nexttrack")
+    def previous_track(self): pyautogui.press("prevtrack")
+    def volume_up(self): pyautogui.press("volumeup")
+    def volume_down(self): pyautogui.press("volumedown")
 
-def go_back(event = None):
-    root.destroy()
-    subprocess.run([
-        "python",
-        os.path.join(os.path.dirname(__file__), "home.py")
-    ])
-
-# -------------------- UI SETUP --------------------
-
-root = CTk()
-root.title("FocusMate - Music Hub")
-root.geometry("400x350")
-root.resizable(False, False)
-center_window(root, 400, 350)
-set_appearance_mode("dark")
-
-root.iconbitmap("assets/icons/music.ico")
-
-music_icon = CTkImage(
-    dark_image=Image.open("./assets/icons/music.png"),
-    size=(80, 80)
-)
-
-CTkLabel(root, image=music_icon, text="").pack(pady=15)
-
-CTkLabel(
-    root,
-    text="Music Hub",
-    font=("Arial", 24, "bold")
-).pack(pady=5)
-
-# -------------------- PLAYLIST DROPDOWN --------------------
-
-playlist_var = StringVar(value="Focus Music")
-
-playlist_menu = CTkOptionMenu(
-    root,
-    values=list(PLAYLISTS.keys()),
-    variable=playlist_var,
-    width=200
-)
-playlist_menu.pack(pady=10)
-
-CTkButton(
-    root,
-    text="Open Playlist",
-    command=lambda: open_playlist(playlist_var.get()),
-    fg_color="#1DB954",
-    hover_color="#14833B"
-).pack(pady=10)
-
-# -------------------- CONTROLS --------------------
-
-controls_frame = CTkFrame(root, fg_color="transparent")
-controls_frame.pack(pady=15)
-
-CTkButton(controls_frame, text="⏮", width=50, command=previous_track).grid(row=0, column=0, padx=5)
-CTkButton(controls_frame, text="⏯", width=50, command=play_pause).grid(row=0, column=1, padx=5)
-CTkButton(controls_frame, text="⏭", width=50, command=next_track).grid(row=0, column=2, padx=5)
-
-volume_frame = CTkFrame(root, fg_color="transparent")
-volume_frame.pack(pady=10)
-
-CTkButton(volume_frame, text="🔉", width=60, command=volume_down).grid(row=0, column=0, padx=10)
-CTkButton(volume_frame, text="🔊", width=60, command=volume_up).grid(row=0, column=1, padx=10)
-
-# -------------------- BACK BUTTON --------------------
-
-back_icon = CTkImage(dark_image=Image.open("./assets/icons/back.png"), size=(25, 25))
-back_button = CTkButton(root, text="", image=back_icon, compound="left", fg_color="transparent", hover_color="#333333", text_color="white", font=("Arial", 16, "bold"), command=go_back,width=40, height=40)
-back_button.place(x=10, y=10)
-
-root.bind("<Escape>", go_back)
-
-if is_connected():
-    root.mainloop()
-else:
-    messagebox.showerror("Bad internet connection", "No internet connection. Please connect to the internet or try to have a stable connection to use the translator.")
-
+    def go_back(self):
+        from screens.home import HomeScreen
+        self.controller.show_frame(HomeScreen)

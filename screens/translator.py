@@ -1,189 +1,83 @@
-from customtkinter import *
-import json
-import sys, os
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-from utils.ui_function import center_window
-import subprocess
-import PIL.Image as Image
+import customtkinter as ctk
+import os
 import requests
+from PIL import Image
 from langdetect import detect
 from tkinter import messagebox
+from screens.base_screen import BaseScreen
 
-SETTINGS_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "settings.json")
+class TranslatorScreen(BaseScreen):
+    def setup_ui(self):
+        self.translated_texts = {}
+        self.back_icon = ctk.CTkImage(dark_image=Image.open("./assets/icons/back.png"), size=(25, 25))
+        self.right_arrow_icon = ctk.CTkImage(dark_image=Image.open("./assets/icons/right_arrow.png"), size=(35, 35))
+        self.translator_image = ctk.CTkImage(dark_image=Image.open("./assets/icons/translator.png"), size=(150, 150))
 
-# -------------------------------------------------------
-#               TRANSLATION CACHE (Speed Booster)
-# -------------------------------------------------------
-translated_texts = {}  # cache dictionary
+        ctk.CTkLabel(self, image=self.translator_image, text="").pack(pady=30)
 
-def is_connected():
-    try:
-        requests.get("https://www.google.com", timeout=3)
-        return True
-    except requests.ConnectionError:
-        return False
-    except requests.exceptions.ReadTimeout:
-        return False
+        self.language_menu = ctk.CTkOptionMenu(self, values=["auto", "en", "es", "fr", "de", "it", "ja", "ko", "pt", "ru", "tr", "zh", "ar"], width=200, command=lambda v: self.update_output())
+        self.language_menu.place(x=70, y=210)
+        self.language_menu.set("auto")
 
+        self.target_menu = ctk.CTkOptionMenu(self, values=["en", "es", "fr", "de", "it", "ja", "ko", "pt", "ru", "tr", "zh", "ar"], width=200, command=lambda v: self.update_output())
+        self.target_menu.place(x=500, y=210)
+        self.target_menu.set("ar")
 
-def get_cached_translation(text, source, target):
-    key = f"{text}|||{source}|||{target}"
-    return translated_texts.get(key)
+        self.main_frame = ctk.CTkFrame(self, fg_color="#1E1E1E")
+        self.main_frame.pack(fill="x", side="bottom", pady=20)
 
-def save_translation_to_cache(text, source, target, translated):
-    key = f"{text}|||{source}|||{target}"
-    translated_texts[key] = translated
-# -------------------------------------------------------
+        self.input_box = ctk.CTkTextbox(self.main_frame, width=350, height=300, fg_color="#2A2A2A")
+        self.input_box.pack(side="left", padx=10, pady=10)
+        self.input_box.bind("<KeyRelease>", self.on_user_typing)
 
+        ctk.CTkLabel(self.main_frame, text="", image=self.right_arrow_icon).pack(side="left", padx=10)
 
-def load_settings():
-    with open(SETTINGS_FILE, "r") as file:
-        settings = json.load(file)
-        return settings["theme"]
+        self.output_box = ctk.CTkTextbox(self.main_frame, width=350, height=300, fg_color="#2A2A2A", state="disabled")
+        self.output_box.pack(side="right", padx=10, pady=10)
 
+        self.back_button = ctk.CTkButton(self, text="", image=self.back_icon, fg_color="transparent", hover_color="#333333", command=self.go_back, width=40, height=40)
+        self.back_button.place(x=10, y=10)
+        
+        self.typing_delay = None
 
-def go_back(event=None):
-    root.destroy()
-    subprocess.run(["python", os.path.join(os.path.dirname(__file__), "..", "screens", "home.py")])
+    def translate_text(self, text, source, target):
+        try:
+            url = "https://api.mymemory.translated.net/get"
+            params = {"q": text, "langpair": f"{source}|{target}"}
+            result = requests.get(url, params=params).json()
+            return result["responseData"]["translatedText"]
+        except:
+            return None
 
+    def update_output(self):
+        text = self.input_box.get("1.0", "end-1c").strip()
+        if not text:
+            self.output_box.configure(state="normal")
+            self.output_box.delete("1.0", "end")
+            self.output_box.configure(state="disabled")
+            return
 
-def translate_text(textToTranslate, source_language, targetLanguage):
-    try :
-        url = "https://api.mymemory.translated.net/get"
-        params = {"q": textToTranslate, "langpair": f"{source_language}|{targetLanguage}"}
+        target_lang = self.target_menu.get()
+        source_option = self.language_menu.get()
+        source_lang = detect(text) if source_option == "auto" else source_option
 
-        result = requests.get(url, params=params).json()
-        return result["responseData"]["translatedText"]
-    except:
-        messagebox.showerror("Error", "Translation failed. Please check your internet connection or try again later.")
+        cache_key = f"{text}|{source_lang}|{target_lang}"
+        if cache_key in self.translated_texts:
+            translated = self.translated_texts[cache_key]
+        else:
+            translated = self.translate_text(text, source_lang, target_lang)
+            if translated: self.translated_texts[cache_key] = translated
 
-root = CTk()
-root.title("FocusMate - Translator")
-root.geometry("950x600")
-set_appearance_mode(load_settings())
-root.iconbitmap("assets/icons/translator.ico")
+        if translated:
+            self.output_box.configure(state="normal")
+            self.output_box.delete("1.0", "end")
+            self.output_box.insert("1.0", translated)
+            self.output_box.configure(state="disabled")
 
-back_icon = CTkImage(dark_image=Image.open("./assets/icons/back.png"), size=(25, 25))
-right_arrow_icon = CTkImage(dark_image=Image.open("./assets/icons/right_arrow.png"), size=(35, 35))
-translator_image = CTkImage(dark_image=Image.open("./assets/icons/translator.png"), size=(150, 150))
+    def on_user_typing(self, event=None):
+        if self.typing_delay: self.after_cancel(self.typing_delay)
+        self.typing_delay = self.after(500, self.update_output)
 
-CTkLabel(root, image=translator_image, text="", font=("Arial", 24, "bold")).pack(pady=50)
-center_window(root, 800, 600)
-
-language_menu = CTkOptionMenu(
-    root,
-    values=["auto", "en", "es", "fr", "de", "it", "ja", "ko", "pt", "ru", "tr", "zh", "ar"],
-    width=200, height=30,
-    fg_color="#1E1E1E",
-    button_color="#1E1E1E",
-    button_hover_color="#333333",
-    dropdown_fg_color="#1E1E1E",
-    dropdown_hover_color="#333333",
-    dropdown_text_color="white",
-    command = lambda v=None: uptade_output()
-)
-language_menu.place(x=70, y=235)
-language_menu.set("auto")
-
-target_menu = CTkOptionMenu(
-    root,
-    values=["en", "es", "fr", "de", "it", "ja", "ko", "pt", "ru", "tr", "zh", "ar"],
-    width=200, height=30,
-    fg_color="#1E1E1E",
-    button_color="#1E1E1E",
-    button_hover_color="#333333",
-    dropdown_fg_color="#1E1E1E",
-    dropdown_hover_color="#333333",
-    dropdown_text_color="white",
-    command = lambda v=None: uptade_output()
-)
-target_menu.place(x=500, y=235)
-target_menu.set("ar")
-
-main_frame = CTkFrame(root, height=400, fg_color="#1E1E1E")
-main_frame.pack(fill="x", side="bottom")
-
-input_box = CTkTextbox(main_frame, width=350, height=300, fg_color="#2A2A2A", font=("Arial", 14))
-input_box.pack(side="left", padx=10, pady=10)
-
-right_arrow_label = CTkLabel(main_frame, text="", image=right_arrow_icon)
-right_arrow_label.pack(side="left", padx=10, pady=10)
-
-output_box = CTkTextbox(main_frame, width=350, height=300, fg_color="#2A2A2A", font=("Arial", 14), state="disabled")
-output_box.pack(side="right", padx=10, pady=10)
-
-back_button = CTkButton(
-    root,
-    text="",
-    image=back_icon,
-    fg_color="transparent",
-    hover_color="#333333",
-    command=go_back,
-    width=40, height=40
-)
-back_button.place(x=10, y=10)
-
-
-# -------------------------------------------------------
-#                THE UPDATED TRANSLATION SYSTEM
-# -------------------------------------------------------
-def uptade_output(event=None):
-    text = input_box.get("1.0", "end-1c").strip()
-    target_lang = target_menu.get()
-    source_option = language_menu.get()
-
-    # Clear output if empty
-    if text == "":
-        output_box.configure(state="normal")
-        output_box.delete("1.0", "end")
-        output_box.configure(state="disabled")
-        return
-
-    # Auto detect
-    if source_option == "auto":
-        source_lang = detect(text)
-    else:
-        source_lang = source_option
-
-    # --------- Check Cache First (Speed!) ----------
-    cached = get_cached_translation(text, source_lang, target_lang)
-    if cached:
-        output_box.configure(state="normal")
-        output_box.delete("1.0", "end")
-        output_box.insert("1.0", cached)
-        output_box.configure(state="disabled")
-        return
-
-    # --------- Translate Normally ----------
-    translated = translate_text(text, source_lang, target_lang)
-
-    # Save to cache
-    save_translation_to_cache(text, source_lang, target_lang, translated)
-
-    # Show output
-    output_box.configure(state="normal")
-    output_box.delete("1.0", "end")
-    output_box.insert("1.0", translated)
-    output_box.configure(state="disabled")
-
-
-typing_delay = None
-
-def on_user_typing(event=None):
-    global typing_delay
-    if typing_delay:
-        root.after_cancel(typing_delay)
-
-    typing_delay = root.after(500, uptade_output)
-
-
-input_box.bind("<KeyRelease>", on_user_typing)
-
-root.bind('<Escape>', go_back)
-
-if is_connected():
-    root.mainloop()
-else:
-    messagebox.showerror("Bad internet connection", "No internet connection. Please connect to the internet or try to have a stable connection to use the translator.")
-
-# root.mainloop()
+    def go_back(self):
+        from screens.home import HomeScreen
+        self.controller.show_frame(HomeScreen)

@@ -6,7 +6,7 @@ import json
 
 def start_app():
     root.destroy()  # Close the splash screen
-    subprocess.run(["python", "screens/home.py"])
+    subprocess.run(["python", "main.py"])
 
 def load_settings():
     with open("data/settings.json", "r") as file:

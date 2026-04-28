@@ -1,92 +1,91 @@
-from customtkinter import *
-import subprocess
+import customtkinter as ctk
 from PIL import Image
 import time
-import sys, os
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-import json
+from screens.base_screen import BaseScreen
 
-def time_update():
-    current_time = time.strftime("%I:%M:%S %p")
-    clock_label.configure(text=current_time)
-    root.after(1000, time_update)  
+class HomeScreen(BaseScreen):
+    def setup_ui(self):
+        # Configure layout
+        self.grid_columnconfigure(0, weight=1)
+        
+        ctk.CTkLabel(self, text="FocusMate", font=("Arial", 36, "bold")).pack(pady=50)
 
-def change_screen(screen_name):
-    if screen_name == "pomodoro":
-        root.destroy()
-        subprocess.run(["python", "screens/pomodoro.py"])
-    elif screen_name == "todo-list":
-        root.destroy()
-        subprocess.run(["python", "screens/todo.py"])
-    elif screen_name == "statics":
-        root.destroy()
-        subprocess.run(["python", "screens/stats.py"])
-    elif screen_name == "settings":
-        root.destroy()
-        subprocess.run(["python", "screens/settings.py"])
-    elif screen_name == "counter":
-        root.destroy()
-        subprocess.run(["python", "screens/counter.py"])
-    elif screen_name == "custom-timer":
-        root.destroy()
-        subprocess.run(["python", "screens/custom-timer.py"])
-    elif screen_name == "translator":
-        root.destroy()
-        subprocess.run(["python", "screens/translator.py"])
-    elif screen_name == "music":
-        root.destroy()
-        subprocess.run(["python", "screens/music.py"])
-    elif screen_name == "Ai":
-        root.destroy()
-        subprocess.run(["python", "screens/Ai.py"])
-    elif screen_name == "Video-Player":
-        root.destroy()
-        subprocess.run([sys.executable, "screens/video-player.py"])
+        self.clock_label = ctk.CTkLabel(self, text="", font=("DS-Digital", 50, "bold"))
+        self.clock_label.pack(pady=100)
 
-def load_settings():
-    with open("data/settings.json", "r") as file:
-        settings = json.load(file)
-        return settings["theme"]
+        self.time_update()
 
-root = CTk()
-root.geometry("1000x600")
-root.title("FocusMate - Home Page")
-root.resizable(False, False)
-root.iconbitmap("assets/logo.ico")
-set_appearance_mode(load_settings())
+        # Load Icons from file system
+        icons = {
+            "counter": "assets/icons/counter.png",
+            "custom-timer": "assets/icons/custom-timer.png",
+            "pomodoro": "assets/icons/pomodoro-timer.png",
+            "Video-Player": "assets/icons/video-player.png",
+            "todo-list": "assets/icons/todo-list.png",
+            "statics": "assets/icons/statics.png",
+            "translator": "assets/icons/translator.png",
+            "music": "assets/icons/music.png",
+            "Ai": "assets/icons/Ai.png",
+            "settings": "assets/icons/settings.png",
+        }
 
-CTkLabel(root, text="FocusMate", font=("Arial", 36, "bold")).pack(pady=50)
+        self.navbar_frame = ctk.CTkFrame(self, height=60, fg_color="#1E1E1E")
+        
+        # Mapping names to classes (I'll need to import them or use strings)
+        # For now, I'll use a dynamic approach or just strings that the controller can handle
+        
+        for i, (name, path) in enumerate(icons.items()):
+            try:
+                ico = ctk.CTkImage(light_image=Image.open(path), dark_image=Image.open(path), size=(40, 40))
+                button = ctk.CTkButton(
+                    self.navbar_frame, 
+                    text="", 
+                    image=ico, 
+                    width=50, 
+                    height=50,
+                    fg_color="transparent",
+                    hover_color="#333333", 
+                    command=lambda n=name: self.change_screen(n)
+                )
+                button.grid(row=0, column=i, padx=15, pady=5)
+            except Exception as e:
+                print(f"Error loading icon {path}: {e}")
 
-clock_label = CTkLabel(root, text="", font=("DS-Digital",50, "bold"))
-clock_label.pack(pady=100)
+        self.navbar_frame.pack(anchor="center", side="bottom", pady=20)
 
-time_update()
+    def time_update(self):
+        current_time = time.strftime("%I:%M:%S %p")
+        self.clock_label.configure(text=current_time)
+        self.after(1000, self.time_update)
 
+    def change_screen(self, screen_name):
+        from screens.pomodoro import PomodoroScreen
+        from screens.todo import TodoScreen
+        from screens.settings import SettingsScreen
+        from screens.counter import CounterScreen
+        from screens.Ai import AiScreen
+        from screens.stats import StatsScreen
+        from screens.custom_timer import CustomTimerScreen
+        from screens.music import MusicScreen
+        from screens.translator import TranslatorScreen
+        from screens.video_player import VideoPlayerScreen
+        from screens.goals import GoalsScreen
 
-#load Icons from file system
+        mapping = {
+            "pomodoro": PomodoroScreen,
+            "todo-list": TodoScreen,
+            "settings": SettingsScreen,
+            "counter": CounterScreen,
+            "Ai": AiScreen,
+            "statics": StatsScreen,
+            "custom-timer": CustomTimerScreen,
+            "music": MusicScreen,
+            "translator": TranslatorScreen,
+            "Video-Player": VideoPlayerScreen,
+            "Goal": GoalsScreen
+        }
 
-icons = {
-    "counter" : "assets/icons/counter.png",
-    "custom-timer" : "assets/icons/custom-timer.png",
-    "pomodoro" : "assets/icons/pomodoro-timer.png",
-    "Video-Player" : "assets/icons/video-player.png",
-    "todo-list" : "assets/icons/todo-list.png",
-    "statics" : "assets/icons/statics.png",
-    "translator" : "assets/icons/translator.png",
-    "music" : "assets/icons/music.png",
-    "Ai" : "assets/icons/Ai.png",
-    "settings" : "assets/icons/settings.png",
-}
-
-
-navbar_frame = CTkFrame(root, height=60, fg_color="#1E1E1E")
-# navbar_frame.pack(side="bottom", fill="x")
-
-for i, (name, path) in enumerate(icons.items()):
-    ico = CTkImage(light_image=Image.open(path), dark_image=Image.open(path), size=(40, 40))
-    
-    button = CTkButton(navbar_frame, text="", image=ico, width=50, height=50,fg_color="transparent",hover_color="#333333", command= lambda n = name: change_screen(n))
-    button.grid(row=0, column=i, padx=15, pady=5)
-
-navbar_frame.pack(anchor="center",side = BOTTOM, pady=20)
-root.mainloop()
+        if screen_name in mapping:
+            self.controller.show_frame(mapping[screen_name])
+        else:
+            print(f"Screen {screen_name} not implemented yet in OOP.")
