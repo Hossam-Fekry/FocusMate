@@ -8,7 +8,9 @@ Todo:
   ✔ Add the the internet check on the music page and Ai page @started(26-04-21 23:02) @done(26-04-21 23:04) @lasted(2m51s)
   ✔ Make the pomodoro-timer page check if the home page is alrady opened before opening it again @started(26-04-26 16:41) @done(26-04-26 16:50) @lasted(9m50s)
   ✔ Finish the custom-timer page refactoring @done(26-04-27 20:29)
-  
+  ✔ Rebuild the app using oop and make it more modular and maintainable @critical
+  ✔ Remake the floating timer feature to maintain the timer even if the user switch to another page for Pomodoro Screen @critical @started(26-04-29 23:10) @done(26-04-30 00:09) @lasted(59m42s)
+  ✔ Fix the design of Pomodoro Screen and the floating time@started(26-04-30 21:54) @done(26-04-30 21:57)
 Custom-Timer page refactoring:
   ✔ Make the custom-timer page check if the home page is alrady opened before opening it again @started(26-04-26 16:59) @done(26-04-26 17:01) @lasted(2m37s)
   ✔ make the entrey validation before starting the timer @started(26-04-27 19:53) @done(26-04-27 20:17) @lasted(25m)
