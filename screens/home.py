@@ -2,7 +2,8 @@ import customtkinter as ctk
 from PIL import Image
 import time
 from screens.base_screen import BaseScreen
-
+import requests
+from tkinter import messagebox
 class HomeScreen(BaseScreen):
     def setup_ui(self):
         # Configure layout
@@ -57,6 +58,14 @@ class HomeScreen(BaseScreen):
         current_time = time.strftime("%I:%M:%S %p")
         self.clock_label.configure(text=current_time)
         self.after(1000, self.time_update)
+    def is_connected(self):
+        try:
+            requests.get("https://www.google.com", timeout=3)
+            return True
+        except requests.ConnectionError:
+            return False
+        except requests.ReadTimeout or requests.ConnectTimeout:
+            return False
 
     def change_screen(self, screen_name):
         from screens.pomodoro import PomodoroScreen
@@ -86,6 +95,11 @@ class HomeScreen(BaseScreen):
         }
 
         if screen_name in mapping:
-            self.controller.show_frame(mapping[screen_name])
+            if screen_name == "Ai" and not self.is_connected():
+                messagebox.showerror(title="No Internet Connection", message="Please connect to the internet to use the AI features.")
+                return
+            else:
+                self.controller.show_frame(mapping[screen_name])
+
         else:
             print(f"Screen {screen_name} not implemented yet in OOP.")
