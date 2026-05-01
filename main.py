@@ -20,7 +20,7 @@ from screens.goals import GoalsScreen
 class FocusMateApp(ctk.CTk):
     def __init__(self):
         super().__init__()
-
+        self.current_screen = None
         self.title("FocusMate")
         self.iconbitmap("assets/logo.ico")
         
@@ -34,6 +34,7 @@ class FocusMateApp(ctk.CTk):
         self.container.pack(side="top", fill="both", expand=True)
         self.container.grid_rowconfigure(0, weight=1)
         self.container.grid_columnconfigure(0, weight=1)
+        self.bind("<Escape>", self.handle_escape)  # Global Escape key binding to go back to Home
 
         # Dictionary to store screen classes and their desired window sizes
         self.screen_configs = {
@@ -46,7 +47,7 @@ class FocusMateApp(ctk.CTk):
             StatsScreen: "600x550",
             CustomTimerScreen: "610x380",
             MusicScreen: "400x400",
-            TranslatorScreen: "950x650",
+            TranslatorScreen: "750x600",
             VideoPlayerScreen: "800x650",
             GoalsScreen: "500x600"
         }
@@ -62,6 +63,10 @@ class FocusMateApp(ctk.CTk):
         except Exception as e:
             print(f"Error loading settings: {e}")
         return {"theme": "dark", "pomodoro_time": 25}
+
+    def handle_escape(self, event=None):
+        if self.current_screen and hasattr(self.current_screen, "go_back"):
+            self.current_screen.go_back()
 
     def save_settings(self, new_settings):
         self.settings.update(new_settings)
@@ -87,6 +92,8 @@ class FocusMateApp(ctk.CTk):
         frame = page_class(parent=self.container, controller=self)
         frame.grid(row=0, column=0, sticky="nsew")
         frame.tkraise()
+        self.current_screen = frame
+    
 
 if __name__ == "__main__":
     app = FocusMateApp()

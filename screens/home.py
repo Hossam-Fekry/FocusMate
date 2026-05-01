@@ -8,9 +8,9 @@ class HomeScreen(BaseScreen):
     def setup_ui(self):
         # Configure layout
         self.grid_columnconfigure(0, weight=1)
+        self.controller.resizable(False, False)
         
         ctk.CTkLabel(self, text="FocusMate", font=("Arial", 36, "bold")).pack(pady=50)
-
         self.clock_label = ctk.CTkLabel(self, text="", font=("DS-Digital", 50, "bold"))
         self.clock_label.pack(pady=100)
 
@@ -95,8 +95,8 @@ class HomeScreen(BaseScreen):
         }
 
         if screen_name in mapping:
-            if screen_name == "Ai" and not self.is_connected():
-                messagebox.showerror(title="No Internet Connection", message="Please connect to the internet to use the AI features.")
+            if screen_name == "Ai" and not self.is_connected() or screen_name == "translator" and not self.is_connected() or screen_name == "music" and not self.is_connected() or screen_name == "Video-Player" and not self.is_connected():
+                messagebox.showerror(title="No Internet Connection", message=f"Please connect to the internet to use the {screen_name} features.")
                 return
             else:
                 self.controller.show_frame(mapping[screen_name])
