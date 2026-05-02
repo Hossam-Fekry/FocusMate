@@ -2,7 +2,6 @@ import customtkinter as ctk
 import json
 import os
 from utils.ui_function import center_window
-
 # Screen Imports
 from screens.home import HomeScreen
 from screens.pomodoro import PomodoroScreen
@@ -74,26 +73,44 @@ class FocusMateApp(ctk.CTk):
             json.dump(self.settings, f, indent=4)
 
     def show_frame(self, page_class):
-        """Destroys the current frame and creates a new one of page_class."""
-        # Update window geometry based on screen config
+        # geometry
         if page_class in self.screen_configs:
             geo = self.screen_configs[page_class]
             width, height = map(int, geo.split('x'))
             self.geometry(geo)
             center_window(self, width, height)
 
-        # Clear existing frame
-        for child in self.container.winfo_children():
-            if hasattr(child, "stop_video"): # Specific for VideoPlayerScreen
-                child.stop_video()
-            child.destroy()
+        old_frame = self.current_screen
 
-        # Create new frame
-        frame = page_class(parent=self.container, controller=self)
-        frame.grid(row=0, column=0, sticky="nsew")
-        frame.tkraise()
-        self.current_screen = frame
-    
+        new_frame = page_class(parent=self.container, controller=self)
+
+        # 👇 مهم: استخدم place بدل grid
+        new_frame.place(x=self.winfo_width(), y=0, relwidth=1, relheight=1)
+
+        self.animate_transition(old_frame, new_frame)
+
+        self.current_screen = new_frame
+    def animate_transition(self, old_frame, new_frame):
+        width = self.winfo_width()
+        step = 20
+        delay = 10
+
+        def slide(x):
+            if x <= 0:
+                new_frame.place(x=0, y=0, relwidth=1, relheight=1)
+
+                if old_frame:
+                    old_frame.destroy()
+                return
+
+            new_frame.place(x=x, y=0)
+
+            if old_frame:
+                old_frame.place(x=x - width, y=0)
+
+            self.after(delay, lambda: slide(x - step))
+
+        slide(width)
 
 if __name__ == "__main__":
     app = FocusMateApp()

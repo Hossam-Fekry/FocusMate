@@ -16,6 +16,7 @@ Todo:
   ✔ Add the going back shortcut using Escape key @done(26-05-02 02:48)
   ✔ Fix the Translator page geomentry and make it more user friendly @started(26-05-02 02:34) @done(26-05-02 02:38) @lasted(4m17s)
   ✔ make the whole app unresizable to save the geometry of the pages and prevent the user from resizing it and breaking the design @done(26-05-02 02:33)
+  ✔ Add animations to the pages when opening and closing them to make it more smooth and nice @done(26-05-03 00:33)
 Custom-Timer page refactoring:
   ✔ Make the custom-timer page check if the home page is alrady opened before opening it again @started(26-04-26 16:59) @done(26-04-26 17:01) @lasted(2m37s)
   ✔ make the entrey validation before starting the timer @started(26-04-27 19:53) @done(26-04-27 20:17) @lasted(25m)
