@@ -14,7 +14,7 @@ class StatsScreen(BaseScreen):
         self.back_button = ctk.CTkButton(self, text="", image=self.back_icon, compound="left", fg_color="transparent", hover_color="#333333", text_color="white", font=("Arial", 16, "bold"), command=self.go_back, width=40, height=40)
         self.back_button.place(x=10, y=10)
 
-        ctk.CTkLabel(self, text="Pomodoro Statistics", font=("Arial", 28, "bold")).pack(pady=20)
+        ctk.CTkLabel(self, text="Working Time Statistics", font=("Arial", 28, "bold")).pack(pady=20)
 
         self.chart_frame = ctk.CTkFrame(self)
         self.chart_frame.pack(fill="both", expand=True, padx=20, pady=(20, 5))
@@ -58,7 +58,7 @@ class StatsScreen(BaseScreen):
         fig, ax = plt.subplots(figsize=(5, 4), dpi=100)
         ax.bar(labels, sizes, color="#02960C")
         ax.set_ylabel("Minutes")
-        ax.set_title("Pomodoro Minutes by Date")
+        ax.set_title("Working Time with date", fontweight="bold", fontsize=15)
         plt.xticks(rotation=30, ha='right')
 
         canvas = FigureCanvasTkAgg(fig, master=self.chart_frame)

@@ -1,5 +1,6 @@
 
 Todo:
+  ☐ Remove the ability to change the pomodoro timer minuts to make the app more clear, simple and easy to use 
   ✔ Rebuild the app using oop and make it more modular and maintainable @critical
   ✔ Add a stauts label in the video player page to show if the video is loading or if it is having an error @started(26-04-21 22:07) @done(26-04-21 22:12) @lasted(5m9s)
   ✔ Add shortcuts to the video player page to go back with ESC and to start the video with Return if you are foucsing on the label @started(26-04-21 22:04) @done(26-04-21 22:06) @lasted(2m55s)
@@ -17,6 +18,7 @@ Todo:
   ✔ Fix the Translator page geomentry and make it more user friendly @started(26-05-02 02:34) @done(26-05-02 02:38) @lasted(4m17s)
   ✔ make the whole app unresizable to save the geometry of the pages and prevent the user from resizing it and breaking the design @done(26-05-02 02:33)
   ✔ Add animations to the pages when opening and closing them to make it more smooth and nice @done(26-05-03 00:33)
+  ✔ Change the Titles in the statics page from Pomodoro statics to, working time Statics and also change it in the diagram @started(26-05-25 05:35) @done(26-05-25 05:37) @lasted(2m1s)
 Custom-Timer page refactoring:
   ✔ Make the custom-timer page check if the home page is alrady opened before opening it again @started(26-04-26 16:59) @done(26-04-26 17:01) @lasted(2m37s)
   ✔ make the entrey validation before starting the timer @started(26-04-27 19:53) @done(26-04-27 20:17) @lasted(25m)
