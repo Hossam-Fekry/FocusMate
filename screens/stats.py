@@ -1,4 +1,4 @@
-import customtkinter as ctk
+from customtkinter import *
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import json
@@ -9,14 +9,21 @@ from screens.base_screen import BaseScreen
 class StatsScreen(BaseScreen):
     def setup_ui(self):
         self.data_file = "data/progress.json"
-        self.back_icon = ctk.CTkImage(dark_image=Image.open("./assets/icons/back.png"), size=(25, 25))
+        self.back_icon = CTkImage(dark_image=Image.open("./assets/icons/back.png"), size=(25, 25))
 
-        self.back_button = ctk.CTkButton(self, text="", image=self.back_icon, compound="left", fg_color="transparent", hover_color="#333333", text_color="white", font=("Arial", 16, "bold"), command=self.go_back, width=40, height=40)
+        self.back_button = CTkButton(self, text="", image=self.back_icon, compound="left", fg_color="transparent", hover_color="#333333", text_color="white", font=("Arial", 16, "bold"), command=self.go_back, width=40, height=40)
         self.back_button.place(x=10, y=10)
 
-        ctk.CTkLabel(self, text="Working Time Statistics", font=("Arial", 28, "bold")).pack(pady=20)
+        CTkLabel(self, text="Working Time Statistics", font=("Arial", 28, "bold")).pack(pady=20)
 
-        self.chart_frame = ctk.CTkFrame(self)
+        self.total_time_label = CTkLabel(self, text=f"Total focus time :", font=("Arial", 20, "bold"))
+        self.total_time_label.pack(pady=(0, 10))
+        
+        self.total_Pomodoro_label = CTkLabel(self, text=f"Total Pomodoro sessions :", font=("Arial", 20, "bold"))
+        self.total_Pomodoro_label.pack(pady=(0, 10))
+        
+
+        self.chart_frame = CTkFrame(self)
         self.chart_frame.pack(fill="both", expand=True, padx=20, pady=(20, 5))
 
         self.refresh_chart()
@@ -39,17 +46,27 @@ class StatsScreen(BaseScreen):
             if date:
                 stats[date] = stats.get(date, 0) + minutes
         return stats
+    
+    def get_total_focus_time(self, sessions):
+        total_focus_time = sum(
+            session["minutes"]
+            for session in sessions
+        )
+        return total_focus_time
 
     def refresh_chart(self):
         sessions = self.load_progress()
         stats = self.get_stats_by_date(sessions)
-        
+        total_focus_time = self.get_total_focus_time(sessions)
+
+        self.total_time_label.configure(text=f"Total focus time : {total_focus_time} minutes")
+        self.total_Pomodoro_label.configure(text=f"Total Pomodoro sessions : {total_focus_time // 25}")
         # Clear previous chart
         for widget in self.chart_frame.winfo_children():
             widget.destroy()
 
         if not stats:
-            ctk.CTkLabel(self.chart_frame, text="No data to display.", font=("Arial", 16)).pack(pady=20)
+            CTkLabel(self.chart_frame, text="No data to display.", font=("Arial", 16)).pack(pady=20)
             return
 
         labels = list(stats.keys())[-7:] # Last 7 days

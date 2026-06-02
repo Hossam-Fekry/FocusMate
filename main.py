@@ -43,7 +43,7 @@ class FocusMateApp(ctk.CTk):
             SettingsScreen: "400x250",
             CounterScreen: "450x350",
             AiScreen: "500x600",
-            StatsScreen: "600x550",
+            StatsScreen: "600x735",
             CustomTimerScreen: "610x380",
             MusicScreen: "400x400",
             TranslatorScreen: "750x600",
