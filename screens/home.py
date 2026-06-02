@@ -78,7 +78,6 @@ class HomeScreen(BaseScreen):
         from screens.music import MusicScreen
         from screens.translator import TranslatorScreen
         from screens.video_player import VideoPlayerScreen
-        from screens.goals import GoalsScreen
 
         mapping = {
             "pomodoro": PomodoroScreen,
@@ -91,7 +90,6 @@ class HomeScreen(BaseScreen):
             "music": MusicScreen,
             "translator": TranslatorScreen,
             "Video-Player": VideoPlayerScreen,
-            "Goal": GoalsScreen
         }
 
         if screen_name in mapping:

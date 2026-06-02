@@ -14,7 +14,6 @@ from screens.custom_timer import CustomTimerScreen
 from screens.music import MusicScreen
 from screens.translator import TranslatorScreen
 from screens.video_player import VideoPlayerScreen
-from screens.goals import GoalsScreen
 
 class FocusMateApp(ctk.CTk):
     def __init__(self):
@@ -47,8 +46,7 @@ class FocusMateApp(ctk.CTk):
             CustomTimerScreen: "610x380",
             MusicScreen: "400x400",
             TranslatorScreen: "750x600",
-            VideoPlayerScreen: "800x650",
-            GoalsScreen: "500x600"
+            VideoPlayerScreen: "800x650"
         }
 
         # Initially show Home Screen
