@@ -4,13 +4,20 @@ import time
 from screens.base_screen import BaseScreen
 import requests
 from tkinter import messagebox
+import json
 class HomeScreen(BaseScreen):
     def setup_ui(self):
+        self.settings_file = "data/settings.json"
+        self.settings = self.load_settings()
         # Configure layout
         self.grid_columnconfigure(0, weight=1)
         self.controller.resizable(False, False)
         
         ctk.CTkLabel(self, text="FocusMate", font=("Arial", 36, "bold")).pack(pady=50)
+        coins_icon = ctk.CTkImage(light_image=Image.open("assets/icons/coins.png"), dark_image=Image.open("assets/icons/coins.png"), size=(30, 30))
+        self.coins_label = ctk.CTkLabel(self, text=f"{self.settings['coins']} coins", image=coins_icon, compound="left", font=("Arial", 16, "bold"))
+        self.coins_label.place(x=25, y=25)
+        
         self.clock_label = ctk.CTkLabel(self, text="", font=("DS-Digital", 50, "bold"))
         self.clock_label.pack(pady=100)
 
@@ -66,6 +73,14 @@ class HomeScreen(BaseScreen):
             return False
         except requests.ReadTimeout or requests.ConnectTimeout:
             return False
+        
+
+    def load_settings(self):
+        try:
+            with open(self.settings_file, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except:
+            return {"coins": 0}
 
     def change_screen(self, screen_name):
         from screens.pomodoro import PomodoroScreen
