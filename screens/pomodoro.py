@@ -179,9 +179,10 @@ class PomodoroScreen(BaseScreen):
     # --------------------------
     def pause_timer(self):
         self.paused = not self.paused
-        self.pause_button.configure(
-            text="Resume" if self.paused else "Pause"
-        )
+        if self.pause_button.winfo_exists():
+            self.pause_button.configure(
+                text="Resume" if self.paused else "Pause"
+            )
 
     # --------------------------
     # 🔄 Reset

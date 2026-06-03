@@ -29,6 +29,16 @@ class FloatingTimer(ctk.CTkToplevel):
         )
         self.label.pack(expand=True)
 
+        self.pause_btn = ctk.CTkButton(
+            self.frame,
+            text="⏸",
+            width=40,
+            height=30,
+            corner_radius=10,
+            command=self.toggle_pause
+    )
+        self.pause_btn.pack(pady=(0, 10))
+
         # ❌ Close button
         self.close_btn = ctk.CTkButton(
             self.frame,
@@ -61,6 +71,10 @@ class FloatingTimer(ctk.CTkToplevel):
             # Always show real time
             time_text = self.pomodoro.format_time(self.pomodoro.time_left)
             self.label.configure(text=time_text)
+            if self.pomodoro.paused:
+                self.pause_btn.configure(text="▶")
+            else:
+                self.pause_btn.configure(text="⏸")
 
         except:
             # If something breaks (screen destroyed)
@@ -80,3 +94,11 @@ class FloatingTimer(ctk.CTkToplevel):
         x = event.x_root - self.x
         y = event.y_root - self.y
         self.geometry(f"+{x}+{y}")
+    
+    def toggle_pause(self):
+        self.pomodoro.pause_timer()
+
+        if self.pomodoro.paused:
+            self.pause_btn.configure(text="▶")
+        else:
+            self.pause_btn.configure(text="⏸")

@@ -28,5 +28,6 @@ Custom-Timer page refactoring:
 
 Gamification:
   ✔ Add coins system to the app and add coins for each minute of work in the pomodoro timer
-  ☐ Add the coins system to the floating timer
+  ✔ Add the coins system to the floating timer @done(26-06-03 19:52)
   ✔ Add a label in the Home page showing your total coins @started(26-06-03 19:28) @done(26-06-03 19:38) @lasted(10m48s)
+  ☐ Desing the shop using Figma
