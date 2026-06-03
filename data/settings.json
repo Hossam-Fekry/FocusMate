@@ -1,4 +1,5 @@
 {
     "theme": "dark",
-    "pomodoro_time": 25
+    "pomodoro_time": 25,
+    "coins": 4
 }

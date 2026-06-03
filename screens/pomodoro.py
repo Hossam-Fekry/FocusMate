@@ -92,6 +92,13 @@ class PomodoroScreen(BaseScreen):
                 return settings.get("pomodoro_time", 25)
         except:
             return 25
+    
+    def load_settings(self):
+        try:
+            with open(self.settings_file, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except:
+            return {"coins": 0}
 
     # --------------------------
     # ⏱️ Format Time
@@ -142,6 +149,8 @@ class PomodoroScreen(BaseScreen):
                 if self.elapsed_time == 60:
                     self.elapsed_time = 0
                     self.save_progress(1)
+                    self.add_coins(1)  # 💰 Add 1 coin per minute
+
 
             else:
                 time.sleep(0.2)
@@ -213,6 +222,12 @@ class PomodoroScreen(BaseScreen):
 
         with open(self.data_file, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
+
+    def add_coins(self, amount):
+            self.settings = self.load_settings()
+            self.settings["coins"] += amount
+            with open(self.settings_file, "w", encoding="utf-8") as f:
+                json.dump(self.settings, f, ensure_ascii=False, indent=4)
 
     # --------------------------
     # 🔙 Go Back (UPDATED)

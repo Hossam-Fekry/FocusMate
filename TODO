@@ -1,6 +1,6 @@
 
-Todo:
-  ☐ Remove the ability to change the pomodoro timer minuts to make the app more clear, simple and easy to use 
+Todo: 
+  ☐ Update the change pomodoro timer time feature
   ✔ Rebuild the app using oop and make it more modular and maintainable @critical
   ✔ Add a stauts label in the video player page to show if the video is loading or if it is having an error @started(26-04-21 22:07) @done(26-04-21 22:12) @lasted(5m9s)
   ✔ Add shortcuts to the video player page to go back with ESC and to start the video with Return if you are foucsing on the label @started(26-04-21 22:04) @done(26-04-21 22:06) @lasted(2m55s)
@@ -25,3 +25,8 @@ Custom-Timer page refactoring:
   ✔ make the entrey validation before starting the timer @started(26-04-27 19:53) @done(26-04-27 20:17) @lasted(25m)
   ✔ make the page antiresizeable to save it's width and height @started(26-04-27 19:49) @done(26-04-27 19:51) @lasted(2m18s)
   ✔ disable the entries when the timer is running to prevent changing the time while the timer is running and make it back when the time is end @done(26-04-27 20:29)
+
+Gamification:
+  ✔ Add coins system to the app and add coins for each minute of work in the pomodoro timer
+  ☐ Add the coins system to the floating timer
+  ☐ Add a label in the Home page showing your total coins
