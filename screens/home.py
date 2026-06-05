@@ -5,16 +5,33 @@ from screens.base_screen import BaseScreen
 import requests
 from tkinter import messagebox
 import json
+# Screen Imports
+from screens.pomodoro import PomodoroScreen
+from screens.todo import TodoScreen
+from screens.settings import SettingsScreen
+from screens.counter import CounterScreen
+from screens.Ai import AiScreen
+from screens.stats import StatsScreen
+from screens.custom_timer import CustomTimerScreen
+from screens.music import MusicScreen
+from screens.translator import TranslatorScreen
+from screens.video_player import VideoPlayerScreen
+from screens.shop import ShopScreen
 class HomeScreen(BaseScreen):
     def setup_ui(self):
         self.settings_file = "data/settings.json"
         self.settings = self.load_settings()
+        coins_icon = ctk.CTkImage(light_image=Image.open("assets/icons/coins.png"), dark_image=Image.open("assets/icons/coins.png"), size=(30, 30))
+        shop_icon = ctk.CTkImage(light_image=Image.open("assets/icons/shop.png"), dark_image=Image.open("assets/icons/shop.png"), size=(30, 30))
         # Configure layout
         self.grid_columnconfigure(0, weight=1)
         self.controller.resizable(False, False)
         
+        self.shop_button = ctk.CTkButton(self, text="", image=shop_icon, width=40, height=40, fg_color="transparent", hover_color="#333333", command=lambda: self.controller.show_frame(ShopScreen))
+        self.shop_button.place(x=935, y=25)
+
         ctk.CTkLabel(self, text="FocusMate", font=("Arial", 36, "bold")).pack(pady=50)
-        coins_icon = ctk.CTkImage(light_image=Image.open("assets/icons/coins.png"), dark_image=Image.open("assets/icons/coins.png"), size=(30, 30))
+
         self.coins_label = ctk.CTkLabel(self, text=f"{self.settings['coins']} coins", image=coins_icon, compound="left", font=("Arial", 16, "bold"))
         self.coins_label.place(x=25, y=25)
         
@@ -37,8 +54,7 @@ class HomeScreen(BaseScreen):
             "settings": "assets/icons/settings.png",
         }
 
-        self.navbar_frame = ctk.CTkFrame(self, height=60, fg_color="#1E1E1E")
-        
+        self.navbar_frame = ctk.CTkFrame(self, height=60)
         # Mapping names to classes (I'll need to import them or use strings)
         # For now, I'll use a dynamic approach or just strings that the controller can handle
         
@@ -83,16 +99,7 @@ class HomeScreen(BaseScreen):
             return {"coins": 0}
 
     def change_screen(self, screen_name):
-        from screens.pomodoro import PomodoroScreen
-        from screens.todo import TodoScreen
-        from screens.settings import SettingsScreen
-        from screens.counter import CounterScreen
-        from screens.Ai import AiScreen
-        from screens.stats import StatsScreen
-        from screens.custom_timer import CustomTimerScreen
-        from screens.music import MusicScreen
-        from screens.translator import TranslatorScreen
-        from screens.video_player import VideoPlayerScreen
+
 
         mapping = {
             "pomodoro": PomodoroScreen,
@@ -105,6 +112,7 @@ class HomeScreen(BaseScreen):
             "music": MusicScreen,
             "translator": TranslatorScreen,
             "Video-Player": VideoPlayerScreen,
+            "shop": ShopScreen
         }
 
         if screen_name in mapping:

@@ -14,6 +14,7 @@ from screens.custom_timer import CustomTimerScreen
 from screens.music import MusicScreen
 from screens.translator import TranslatorScreen
 from screens.video_player import VideoPlayerScreen
+from screens.shop import ShopScreen
 
 class FocusMateApp(ctk.CTk):
     def __init__(self):
@@ -25,7 +26,9 @@ class FocusMateApp(ctk.CTk):
         # Load settings
         self.settings_file = "data/settings.json"
         self.settings = self.load_settings()
-        ctk.set_appearance_mode(self.settings.get("theme", "dark"))
+        ctk.set_appearance_mode("dark")
+        self.Equipped_theme = self.settings.get("Equipped_theme", "dark-blue")
+        ctk.set_default_color_theme(f"data/{self.Equipped_theme}.json")
         
         # Main container
         self.container = ctk.CTkFrame(self)
@@ -46,7 +49,8 @@ class FocusMateApp(ctk.CTk):
             CustomTimerScreen: "610x380",
             MusicScreen: "400x400",
             TranslatorScreen: "750x600",
-            VideoPlayerScreen: "800x650"
+            VideoPlayerScreen: "800x650",
+            ShopScreen: "1000x600"
         }
 
         # Initially show Home Screen
@@ -59,7 +63,7 @@ class FocusMateApp(ctk.CTk):
                     return json.load(f)
         except Exception as e:
             print(f"Error loading settings: {e}")
-        return {"theme": "dark", "pomodoro_time": 25}
+        return {"Equipped_theme": "dark-blue", "pomodoro_time": 25}
 
     def handle_escape(self, event=None):
         if self.current_screen and hasattr(self.current_screen, "go_back"):
@@ -109,6 +113,9 @@ class FocusMateApp(ctk.CTk):
             self.after(delay, lambda: slide(x - step))
 
         slide(width)
+        
+    def reload_theme(self):
+        ctk.set_default_color_theme(f"data/{self.settings.get('Equipped_theme', 'dark-blue')}.json")
 
 if __name__ == "__main__":
     app = FocusMateApp()

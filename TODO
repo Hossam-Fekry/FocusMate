@@ -30,4 +30,5 @@ Gamification:
   ✔ Add coins system to the app and add coins for each minute of work in the pomodoro timer
   ✔ Add the coins system to the floating timer @done(26-06-03 19:52)
   ✔ Add a label in the Home page showing your total coins @started(26-06-03 19:28) @done(26-06-03 19:38) @lasted(10m48s)
-  ☐ Desing the shop using Figma
+  ✔ Desing the shop using Figma
+  ✔ Build the shop page and add the themes to it and make it show the coins needed to buy each theme and make it possible to buy the themes and apply them to the app @critical @started(26-06-04 22:15) @done(26-06-05 03:57) @lasted(5h42m)

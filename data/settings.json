@@ -1,5 +1,8 @@
 {
-    "theme": "dark",
+    "Equipped_theme": "dark-blue",
+    "Owned_themes": [
+        "dark-blue"
+    ],
     "pomodoro_time": 25,
-    "coins": 4
+    "coins": 0
 }
