@@ -1,6 +1,7 @@
 
 Todo: 
   ☐ Update the change pomodoro timer time feature
+  ☐ Fix the multi floating timer bug @critical
   ✔ Rebuild the app using oop and make it more modular and maintainable @critical
   ✔ Add a stauts label in the video player page to show if the video is loading or if it is having an error @started(26-04-21 22:07) @done(26-04-21 22:12) @lasted(5m9s)
   ✔ Add shortcuts to the video player page to go back with ESC and to start the video with Return if you are foucsing on the label @started(26-04-21 22:04) @done(26-04-21 22:06) @lasted(2m55s)
@@ -32,3 +33,5 @@ Gamification:
   ✔ Add a label in the Home page showing your total coins @started(26-06-03 19:28) @done(26-06-03 19:38) @lasted(10m48s)
   ✔ Desing the shop using Figma
   ✔ Build the shop page and add the themes to it and make it show the coins needed to buy each theme and make it possible to buy the themes and apply them to the app @critical @started(26-06-04 22:15) @done(26-06-05 03:57) @lasted(5h42m)
+  ☐ Add the dark-blue theme (default) in the shop to make the user able to chose it again after buying another theme
+  ☐ Remove the theme control from the settings
