@@ -1,6 +1,7 @@
 import customtkinter as ctk
 import json
 import os
+import sys
 from PIL import Image
 import threading
 import time
@@ -121,6 +122,13 @@ class PomodoroScreen(BaseScreen):
     # ▶️ Start Timer
     # --------------------------
     def start_timer(self):
+        if not self.controller.is_admin():
+            self.controller.run_as_admin()
+            sys.exit()
+            return
+        
+        self.controller.block_sites()
+
         if not self.running:
             self.running = True
             self.paused = False
@@ -164,6 +172,8 @@ class PomodoroScreen(BaseScreen):
     # --------------------------
     def on_timer_complete(self):
         self.timer_label.configure(text="00:00")
+
+        self.controller.unblock_sites()
 
         winsound.Beep(1000, 1000)
 
@@ -253,6 +263,7 @@ class PomodoroScreen(BaseScreen):
             else:  # NO → stop timer
                 self.running = False
                 self.paused = False
+                self.controller.unblock_sites()
 
         from screens.home import HomeScreen
         self.controller.show_frame(HomeScreen)

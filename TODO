@@ -2,7 +2,9 @@
 Todo: 
   ☐ Update the change pomodoro timer time feature
   ☐ Fix the multi floating timer bug @critical @high
-  ☐ Start desingning for the distractions
+  ✔ Start desingning for blocking the distractions @done(26-06-10 05:38)
+  ✔ implement the blocking feature and make it work with the distractions list @done(26-06-10 05:38)
+  ☐ Add a feature to the distractions list to make the user able to add the distractions
 
 Gamification:
   ☐ Add the dark-blue theme (default) in the shop to make the user able to chose it again after buying another theme
@@ -10,7 +12,7 @@ Gamification:
   ☐ Work on improving the Golden theme design to make it more nice and elegant
   ☐ make a list with a new themes
   ☐ Add new ways to spend conins
-  ☐ Mentian the Shop page code by using class for the themes to make it easier to add remove and control themes
+  ✘ Mentian the Shop page code by using class for the themes to make it easier to add remove and control themes @started(26-06-10 04:00) @cancelled(26-06-10 04:28) @wasted(28m55s)
   ☐ Fix the coins issue in the shop page to make the system calculats from the new coins no the old one by reloading it
 Archive:
   ✔ Rebuild the app using oop and make it more modular and maintainable @critical @project(Todo)

@@ -2,6 +2,8 @@ import customtkinter as ctk
 import json
 import os
 from utils.ui_function import center_window
+import sys
+import ctypes
 # Screen Imports
 from screens.home import HomeScreen
 from screens.pomodoro import PomodoroScreen
@@ -29,6 +31,19 @@ class FocusMateApp(ctk.CTk):
         ctk.set_appearance_mode("dark")
         self.Equipped_theme = self.settings.get("Equipped_theme", "dark-blue")
         ctk.set_default_color_theme(f"data/{self.Equipped_theme}.json")
+        self.HOSTS_PATH = r"C:\Windows\System32\drivers\etc\hosts"
+
+        self.START_MARK = "# FOCUSMATE START"
+        self.END_MARK = "# FOCUSMATE END"
+
+        self.BLOCKED_SITES = [
+            "127.0.0.1 facebook.com",
+            "127.0.0.1 www.facebook.com",
+            "127.0.0.1 instagram.com",
+            "127.0.0.1 www.instagram.com",
+            "127.0.0.1 tiktok.com",
+            "127.0.0.1 www.tiktok.com",
+        ]
         
         # Main container
         self.container = ctk.CTkFrame(self)
@@ -116,6 +131,85 @@ class FocusMateApp(ctk.CTk):
         
     def reload_theme(self):
         ctk.set_default_color_theme(f"data/{self.settings.get('Equipped_theme', 'dark-blue')}.json")
+    
+    def is_admin(self):
+        return ctypes.windll.shell32.IsUserAnAdmin()
+    
+    def read_hosts(self):
+        with open(self.HOSTS_PATH, "r", encoding="utf-8") as f:
+            return f.readlines()
+
+
+    def write_hosts(self, lines):
+        with open(self.HOSTS_PATH, "w", encoding="utf-8") as f:
+            f.writelines(lines)
+
+
+    def block_sites(self):
+
+        lines = self.read_hosts()
+
+        # remove old block if exists
+        new_lines = []
+        inside_block = False
+
+        for line in lines:
+            if self.START_MARK in line:
+                inside_block = True
+                continue
+            if self.END_MARK in line:
+                inside_block = False
+                continue
+            if not inside_block:
+                new_lines.append(line)
+
+        # add new block section
+        new_lines.append("\n" + self.START_MARK + "\n")
+        for site in self.BLOCKED_SITES:
+            new_lines.append(site + "\n")
+        new_lines.append(self.END_MARK + "\n")
+
+        self.write_hosts(new_lines)
+
+
+
+    def unblock_sites(self):
+
+        lines = self.read_hosts()
+
+        new_lines = []
+        inside_block = False
+
+        for line in lines:
+            if self.START_MARK in line:
+                inside_block = True
+                continue
+            if self.END_MARK in line:
+                inside_block = False
+                continue
+            if not inside_block:
+                new_lines.append(line)
+
+        self.write_hosts(new_lines)
+
+
+
+    def run_as_admin(self):
+        """Relaunch the script with admin privileges."""
+        script = sys.argv[0]
+        params = " ".join(sys.argv[1:])
+
+        # ShellExecute with "runas" triggers UAC popup
+        ctypes.windll.shell32.ShellExecuteW(
+            None,
+            "runas",
+            sys.executable,
+            f'"{script}" {params}',
+            None,
+            1
+        )
+
+
 
 if __name__ == "__main__":
     app = FocusMateApp()
