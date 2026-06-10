@@ -1,3 +1,4 @@
+from tkinter import messagebox
 import json
 from customtkinter import *
 from PIL import Image
@@ -104,16 +105,17 @@ class ShopScreen(BaseScreen):
             # Try to buy the theme
             coins = self.settings.get("coins", 0)
             if coins >= price:
-                coins -= price
-                owned_themes = self.settings.get("Owned_themes", [])
-                owned_themes.append(theme_name)
-                self.controller.save_settings({"coins": coins, "Owned_themes": owned_themes})
-                self.controller.reload_theme()
-                self.coins_label.configure(text=f"{coins} coins")
-                self.Forest_theme_buy_button.configure(text=self.get_theme_status("forest_theme"))
-                self.Coffee_theme_buy_button.configure(text=self.get_theme_status("coffee_theme"))
-                self.Ocean_theme_buy_button.configure(text=self.get_theme_status("ocean_theme"))
-                self.Golden_theme_buy_button.configure(text=self.get_theme_status("golden_theme"))
+                self.complete_payment = messagebox.askyesno("Complete Payment check",f"Do you want to spend {price} for this theme, After this payment your coins will go from {coins} to {coins - price}")
+                if self.complete_payment:
+                    coins -= price
+                    owned_themes = self.settings.get("Owned_themes", [])
+                    owned_themes.append(theme_name)
+                    self.controller.save_settings({"coins": coins, "Owned_themes": owned_themes})
+                    self.controller.reload_theme()
+                    self.coins_label.configure(text=f"{coins} coins")
+                    self.Forest_theme_buy_button.configure(text=self.get_theme_status("forest_theme"))
+                    self.Coffee_theme_buy_button.configure(text=self.get_theme_status("coffee_theme"))
+                    self.Ocean_theme_buy_button.configure(text=self.get_theme_status("ocean_theme"))
+                    self.Golden_theme_buy_button.configure(text=self.get_theme_status("golden_theme"))
             else:
-                from tkinter import messagebox
-                messagebox.showerror("Not Enough Coins", "You don't have enough coins to buy this theme Try to Study Harder.")
+                messagebox.showerror("No Enough Coins", "You don't have enough coins to buy this theme Try to Study Harder.")
