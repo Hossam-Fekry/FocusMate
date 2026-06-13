@@ -111,11 +111,13 @@ class ShopScreen(BaseScreen):
                     owned_themes = self.settings.get("Owned_themes", [])
                     owned_themes.append(theme_name)
                     self.controller.save_settings({"coins": coins, "Owned_themes": owned_themes})
+                    self.settings = self.load_settings()
                     self.controller.reload_theme()
                     self.coins_label.configure(text=f"{coins} coins")
                     self.Forest_theme_buy_button.configure(text=self.get_theme_status("forest_theme"))
                     self.Coffee_theme_buy_button.configure(text=self.get_theme_status("coffee_theme"))
                     self.Ocean_theme_buy_button.configure(text=self.get_theme_status("ocean_theme"))
                     self.Golden_theme_buy_button.configure(text=self.get_theme_status("golden_theme"))
+                    self.settings = self.load_settings()
             else:
                 messagebox.showerror("No Enough Coins", "You don't have enough coins to buy this theme Try to Study Harder.")
