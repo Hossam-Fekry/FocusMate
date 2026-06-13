@@ -3,27 +3,14 @@ import json
 import os
 import sys
 from PIL import Image
-import threading
-import time
-import datetime
 from tkinter import messagebox
-from plyer import notification
-import winsound
 from screens.base_screen import BaseScreen
 
 
 class PomodoroScreen(BaseScreen):
 
     def setup_ui(self):
-        self.settings_file = "data/settings.json"
-        self.data_file = "data/progress.json"
-
-        # 🧠 State
-        self.running = False
-        self.paused = False
-        self.active_screen = True   # 🔥 NEW (important)
-        self.elapsed_time = 0
-        self.time_left = self.load_time() * 60
+        self.manager = self.controller.pomodoro_manager
 
         # UI
         back_icon = ctk.CTkImage(
@@ -40,7 +27,7 @@ class PomodoroScreen(BaseScreen):
 
         self.timer_label = ctk.CTkLabel(
             self,
-            text=self.format_time(self.time_left),
+            text=self.manager.format_time(self.manager.time_left),
             font=("Arial", 40, "bold")
         )
         self.timer_label.pack(pady=20)
@@ -82,169 +69,33 @@ class PomodoroScreen(BaseScreen):
             height=40
         )
         self.back_button.place(x=10, y=10)
+        
+        self.update_ui_loop()
 
-    # --------------------------
-    # 📂 Load Settings
-    # --------------------------
-    def load_time(self):
-        try:
-            with open(self.settings_file, "r") as file:
-                settings = json.load(file)
-                return settings.get("pomodoro_time", 25)
-        except:
-            return 25
-    
-    def load_settings(self):
-        try:
-            with open(self.settings_file, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except:
-            return {"coins": 0}
-
-    # --------------------------
-    # ⏱️ Format Time
-    # --------------------------
-    def format_time(self, seconds):
-        mins, secs = divmod(seconds, 60)
-        return f"{mins:02d}:{secs:02d}"
-
-    # --------------------------
-    # 🔄 Update UI (SAFE)
-    # --------------------------
-    def update_timer_label(self):
+    def update_ui_loop(self):
         if not self.winfo_exists():
             return
-        self.timer_label.configure(
-            text=self.format_time(self.time_left)
-        )
-
-    # --------------------------
-    # ▶️ Start Timer
-    # --------------------------
-    def start_timer(self):
-        if not self.controller.is_admin():
-            self.controller.run_as_admin()
-            sys.exit()
-            return
+            
+        self.timer_label.configure(text=self.manager.format_time(self.manager.time_left))
         
-        self.controller.block_sites()
-
-        if not self.running:
-            self.running = True
-            self.paused = False
-            threading.Thread(
-                target=self.run_timer,
-                daemon=True
-            ).start()
-
-    # --------------------------
-    # 🧵 Timer Loop
-    # --------------------------
-    def run_timer(self):
-        while self.running and self.time_left > 0:
-
-            if not self.paused:
-                time.sleep(1)
-
-                self.time_left -= 1
-                self.elapsed_time += 1
-
-                # 🔥 THREAD SAFE UPDATE
-                if self.active_screen:
-                    self.after(0, self.update_timer_label)
-
-                # Save every minute
-                if self.elapsed_time == 60:
-                    self.elapsed_time = 0
-                    self.save_progress(1)
-                    self.add_coins(1)  # 💰 Add 1 coin per minute
-
-
-            else:
-                time.sleep(0.2)
-
-        if self.running and self.time_left == 0:
-            self.running = False
-            self.after(0, self.on_timer_complete)
-
-    # --------------------------
-    # 🔔 When Finished
-    # --------------------------
-    def on_timer_complete(self):
-        self.timer_label.configure(text="00:00")
-
-        self.controller.unblock_sites()
-
-        winsound.Beep(1000, 1000)
-
-        notification.notify(
-            title='FocusMate Timer',
-            message='Your timer is complete!',
-            app_icon='assets/logo.ico',
-            timeout=10
-        )
-
-    # --------------------------
-    # ⏸️ Pause
-    # --------------------------
-    def pause_timer(self):
-        self.paused = not self.paused
-        if self.pause_button.winfo_exists():
-            self.pause_button.configure(
-                text="Resume" if self.paused else "Pause"
-            )
-
-    # --------------------------
-    # 🔄 Reset
-    # --------------------------
-    def reset_timer(self):
-        self.running = False
-        self.time_left = self.load_time() * 60
-        self.elapsed_time = 0
-        self.update_timer_label()
-
-    # --------------------------
-    # 💾 Save Progress
-    # --------------------------
-    def save_progress(self, minutes):
-        if os.path.exists(self.data_file):
-            with open(self.data_file, "r", encoding="utf-8") as f:
-                try:
-                    data = json.load(f)
-                except:
-                    data = {"sessions": []}
+        if self.manager.is_paused:
+            self.pause_button.configure(text="Resume")
         else:
-            data = {"sessions": []}
+            self.pause_button.configure(text="Pause")
+            
+        self.after(500, self.update_ui_loop)
 
-        today = datetime.date.today().isoformat()
+    def start_timer(self):
+        self.manager.start()
 
-        found = False
-        for session in data["sessions"]:
-            if session["date"] == today:
-                session["minutes"] += minutes
-                found = True
-                break
+    def pause_timer(self):
+        self.manager.pause()
 
-        if not found:
-            data["sessions"].append({
-                "date": today,
-                "minutes": minutes
-            })
+    def reset_timer(self):
+        self.manager.reset()
 
-        with open(self.data_file, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=4)
-
-    def add_coins(self, amount):
-            self.settings = self.load_settings()
-            self.settings["coins"] += amount
-            with open(self.settings_file, "w", encoding="utf-8") as f:
-                json.dump(self.settings, f, ensure_ascii=False, indent=4)
-
-    # --------------------------
-    # 🔙 Go Back (UPDATED)
-    # --------------------------
     def go_back(self):
-        if self.running:
+        if self.manager.is_running:
             choice = messagebox.askyesnocancel(
                 "Timer Running",
                 "Timer is running.\n\nYes → Keep running\nNo → Stop timer\nCancel → Stay"
@@ -254,16 +105,9 @@ class PomodoroScreen(BaseScreen):
                 return
 
             elif choice:  # YES → keep running + open floating
-                from screens.floating_timer import FloatingTimer
-
-                FloatingTimer(self.controller, self)  # 🔥 THIS LINE
-
-                self.active_screen = False  # stop UI updates only
-
+                self.controller.show_floating_timer()
             else:  # NO → stop timer
-                self.running = False
-                self.paused = False
-                self.controller.unblock_sites()
+                self.manager.reset()
 
         from screens.home import HomeScreen
         self.controller.show_frame(HomeScreen)

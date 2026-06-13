@@ -17,6 +17,7 @@ from screens.music import MusicScreen
 from screens.translator import TranslatorScreen
 from screens.video_player import VideoPlayerScreen
 from screens.shop import ShopScreen
+from utils.pomodoro_manager import PomodoroSessionManager
 
 class FocusMateApp(ctk.CTk):
     def __init__(self):
@@ -45,6 +46,10 @@ class FocusMateApp(ctk.CTk):
             "127.0.0.1 www.tiktok.com",
         ]
         
+        # Managers
+        self.pomodoro_manager = PomodoroSessionManager(self)
+        self.floating_timer = None
+
         # Main container
         self.container = ctk.CTkFrame(self)
         self.container.pack(side="top", fill="both", expand=True)
@@ -70,6 +75,9 @@ class FocusMateApp(ctk.CTk):
 
         # Initially show Home Screen
         self.show_frame(HomeScreen)
+        
+        # Handle window closing
+        self.protocol("WM_DELETE_WINDOW", self.on_closing)
 
     def load_settings(self):
         try:
@@ -192,7 +200,18 @@ class FocusMateApp(ctk.CTk):
 
         self.write_hosts(new_lines)
 
+    def show_floating_timer(self):
+        if self.floating_timer is None or not self.floating_timer.winfo_exists():
+            from screens.floating_timer import FloatingTimer
+            self.floating_timer = FloatingTimer(self, self.pomodoro_manager)
+        else:
+            self.floating_timer.lift()
+            self.floating_timer.focus_force()
 
+    def on_closing(self):
+        if self.pomodoro_manager.is_running:
+            self.unblock_sites()
+        self.destroy()
 
     def run_as_admin(self):
         """Relaunch the script with admin privileges."""

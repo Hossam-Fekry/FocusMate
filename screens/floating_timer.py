@@ -2,10 +2,11 @@ import customtkinter as ctk
 
 
 class FloatingTimer(ctk.CTkToplevel):
-    def __init__(self, parent, pomodoro_instance):
-        super().__init__(parent)
+    def __init__(self, controller, manager):
+        super().__init__(controller)
 
-        self.pomodoro = pomodoro_instance
+        self.controller = controller
+        self.manager = manager
 
         # 🪟 Window setup
         self.geometry("220x110")
@@ -67,21 +68,19 @@ class FloatingTimer(ctk.CTkToplevel):
     # 🔄 Update Timer
     # --------------------------
     def update_ui(self):
-        try:
-            # Always show real time
-            time_text = self.pomodoro.format_time(self.pomodoro.time_left)
-            self.label.configure(text=time_text)
-            if self.pomodoro.paused:
-                self.pause_btn.configure(text="▶")
-            else:
-                self.pause_btn.configure(text="⏸")
-
-        except:
-            # If something breaks (screen destroyed)
-            self.destroy()
+        if not self.winfo_exists():
             return
 
-        self.after(1000, self.update_ui)
+        # Always show real time
+        time_text = self.manager.format_time(self.manager.time_left)
+        self.label.configure(text=time_text)
+        
+        if self.manager.is_paused:
+            self.pause_btn.configure(text="▶")
+        else:
+            self.pause_btn.configure(text="⏸")
+
+        self.after(500, self.update_ui)
 
     # --------------------------
     # 🖱️ Dragging Logic
@@ -96,9 +95,10 @@ class FloatingTimer(ctk.CTkToplevel):
         self.geometry(f"+{x}+{y}")
     
     def toggle_pause(self):
-        self.pomodoro.pause_timer()
-
-        if self.pomodoro.paused:
-            self.pause_btn.configure(text="▶")
-        else:
-            self.pause_btn.configure(text="⏸")
+        self.manager.pause()
+        
+    def destroy(self):
+        # Clear the reference in controller before destroying
+        if hasattr(self.controller, 'floating_timer'):
+            self.controller.floating_timer = None
+        super().destroy()
