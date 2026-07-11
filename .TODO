@@ -1,0 +1,52 @@
+
+Todo: 
+  ☐ Update the save algorithm in the settings page
+  
+Gamification:
+  ☐ Add the dark-blue theme (the default theme) in the shop to make the user able to chose it again after buying another theme
+  ☐ Work on improving the Golden theme design to make it more nice and elegant
+  ☐ make a list with a new themes
+  ☐ Add new ways to spend conins
+  ☐ Start Planning and desingning for the 
+  
+SocialMedia blocking:
+  ☐ Add a feature to the distractions list to make the user able to add the distractions
+
+Archive:
+  ✔ Fix the multi floating timer bug @critical @high @done(26-06-14 02:43) @project(Todo)
+  ✔ Make a deep debugging for the blocking feature to make sure it is working correctly and it is blocking and unblocking the distractions properly @started(26-06-24 06:20) @done(26-06-24 06:31) @lasted(11m13s) @project(SocialMedia blocking)
+  ✔ Fix the coins issue in the shop page to make the system calculats from the new coins no the old one by reloading it @done(26-06-13 08:11) @project(Gamification)
+  ✔ Start desingning for blocking the distractions @done(26-06-10 05:38) @project(SocialMedia blocking)
+  ✔ implement the blocking feature and make it work with the distractions list @done(26-06-10 05:38) @project(SocialMedia blocking)
+  ✘ Mentian the Shop page code by using class for the themes to make it easier to add wdaswdaremove and control themes @started(26-06-10 04:00) @cancelled(26-06-10 04:28) @wasted(28m55s) @project(Gamification)
+  ✔ Rebuild the app using oop and make it more modular and maintainable @critical @project(Todo)
+  ✔ Add a stauts label in the video player page to show if the video is loading or if it is having an error @started(26-04-21 22:07) @done(26-04-21 22:12) @lasted(5m9s) @project(Todo)
+  ✔ Add shortcuts to the video player page to go back with ESC and to start the video with Return if you are foucsing on the label @started(26-04-21 22:04) @done(26-04-21 22:06) @lasted(2m55s) @project(Todo)
+  ✔ update the pause function to make it pause and play function @started(26-04-21 22:24) @done(26-04-21 22:26) @lasted(2m30s) @project(Todo)
+  ✔ Fix the bug in video player page that if you tried to open it with no internet connection @started(26-04-21 22:57) @done(26-04-21 22:59) @lasted(2m41s) @project(Todo)
+  ✔ Fix the bug in video player page that if you used invalid video link @started(26-04-21 22:41) @done(26-04-21 22:56) @lasted(15m) @project(Todo)
+  ✔ Add the the internet check on the music page and Ai page @started(26-04-21 23:02) @done(26-04-21 23:04) @lasted(2m51s) @project(Todo)
+  ✔ Make the pomodoro-timer page check if the home page is alrady opened before opening it again @started(26-04-26 16:41) @done(26-04-26 16:50) @lasted(9m50s) @project(Todo)
+  ✔ Finish the custom-timer page refactoring @done(26-04-27 20:29) @project(Todo)
+  ✔ Remake the floating timer feature to maintain the timer even if the user switch to another page for Pomodoro Screen @critical @started(26-04-29 23:10) @done(26-04-30 00:09) @lasted(59m42s) @project(Todo)
+  ✔ Fix the design of Pomodoro Screen and the floatibgvng time @started(26-04-30 21:54) @done(26-04-30 21:57) @project(Todo)
+  ✔ Rebuild all the canceled featuers which is canceld in the oop converting process for the Ai Page @done(26-05-02 02:04) @project(Todo)
+  ✔ Check the Internet connection before opennig the Music page or translator page or even video player page @started(26-05-02 02:09) @done(26-05-02 02:12) @lasted(3m38s) @project(Todo)
+  ✔ Add the going back shortcut using Escape key @done(26-05-02 02:48) @project(Todo)
+  ✔ Fix the Translator page geomentry and make it more user friendly @started(26-05-02 02:34) @done(26-05-02 02:38) @lasted(4m17s) @project(Todo)
+  ✔ make the whole app unresizable to save the geometry of the pages and prevent the user from resizing it and breaking the design @done(26-05-02 02:33) @project(Todo)
+  ✔ Add animations to the pages when opening and closing them to make it more smooth and nice @done(26-05-03 00:33) @project(Todo)
+  ✔ Change the Titles in the statics page from Pomodoro statics to, working time Statics and also change it in the diagram @started(26-05-25 05:35) @done(26-05-25 05:37) @lasted(2m1s) @project(Todo)
+  ✔ Improve the statics page by adding more statics like the total working time and the total completed pomodoros @started(26-06-02 20:56) @done(26-06-02 21:17) @lasted(20m43s) @project(Todo)
+  ✔ Make the custom-timer page check if the home page is alrady opened before opening it again @started(26-04-26 16:59) @done(26-04-26 17:01) @lasted(2m37s) @project(Custom-Timer page refactoring)
+  ✔ make the entrey validation before starting the timer @started(26-04-27 19:53) @done(26-04-27 20:17) @lasted(25m) @project(Custom-Timer page refactoring)
+  ✔ make the page antiresizeable to save it's width and height @started(26-04-27 19:49) @done(26-04-27 19:51) @lasted(2m18s) @project(Custom-Timer page refactoring)
+  ✔ disable the entries when the timer is running to prevent changing the time while the timer is running and make it back when the time is end @done(26-04-27 20:29) @project(Custom-Timer page refactoring)
+  ✔ Add coins system to the app and add coins for each minute of work in the pomodoro timer @project(Gamification)
+  ✔ Add the coins system to the floating timer @done(26-06-03 19:52) @project(Gamification)
+  ✔ Add a label in the Home page showing your total coins @started(26-06-03 19:28) @done(26-06-03 19:38) @lasted(10m48s) @project(Gamification)
+  ✔ Desing the shop using Figma @project(Gamification)
+  ✔ Build the shop page and add the themes to it and make it show the coins needed to buy each theme and make it possible to buy the themes and apply them to the app @critical @started(26-06-04 22:15) @done(26-06-05 03:57) @lasted(5h42m) @project(Gamification)
+  ✔ Add a messageboxes to ensure the user want to buy the theme and to show him the coins he has and if he has enough coins to buy the theme or not @started(26-06-08 02:31) @done(26-06-08 02:44) @lasted(13m48s) @project(Gamification)
+  ✔ Remove the *theme control* from the settings @today @done(26-06-07 05:52) @project(Gamification)
+
