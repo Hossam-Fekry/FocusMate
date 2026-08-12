@@ -31,6 +31,18 @@ class PomodoroSessionManager:
             print(f"Error loading initial time: {e}")
         return 25
 
+    def reload_settings(self):
+        """Reload timer-related settings from settings.json."""
+        try:
+            with open(self.settings_file, "r", encoding="utf-8") as f:
+                settings = json.load(f)
+
+            if not self.is_running:
+                self.time_left = settings.get("pomodoro_time", 25) * 60
+
+        except Exception as e:
+            print(f"Error reloading settings: {e}")
+    
     def format_time(self, seconds):
         mins, secs = divmod(int(seconds), 60)
         return f"{mins:02d}:{secs:02d}"

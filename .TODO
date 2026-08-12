@@ -1,6 +1,6 @@
 
 Todo: 
-  ☐ Update the save algorithm in the settings page
+  ✔ Update the save algorithm in the settings page @done(26-08-12 01:35)
   
 Gamification:
   ☐ Add the dark-blue theme (the default theme) in the shop to make the user able to chose it again after buying another theme
@@ -10,7 +10,7 @@ Gamification:
   ☐ Start Planning and desingning for the 
   
 SocialMedia blocking:
-  ☐ Add a feature to the distractions list to make the user able to add the distractions
+  ✔ Add a feature to the distractions list to make the user able to add the distractions @started(26-08-12 01:36) @done(26-08-12 03:36) @lasted(2h40s)
 
 Archive:
   ✔ Fix the multi floating timer bug @critical @high @done(26-06-14 02:43) @project(Todo)

@@ -1,0 +1,14 @@
+{
+    "websites": [
+        {
+            "name": "Youtube",
+            "url": "youtube.com",
+            "enabled": true
+        },
+        {
+            "name": "instagram",
+            "url": "instagram.com",
+            "enabled": true
+        }
+    ]
+}
